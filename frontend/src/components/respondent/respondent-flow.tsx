@@ -174,14 +174,14 @@ export function RespondentFlow({ form, slug }: RespondentFlowProps) {
                   className="text-[length:var(--rx-font-question-title-mobile)] font-normal leading-tight lg:text-[length:var(--rx-font-question-title)]"
                   style={{ color: "var(--rx-question)" }}
                 >
-                  {form.title}
+                  {(form.settings?.welcome_title as string) || form.title}
                 </h1>
-                {form.description ? (
+                {form.settings?.welcome_description || form.description ? (
                   <p
                     className="leading-relaxed text-[length:var(--rx-font-description-mobile)] lg:text-[length:var(--rx-font-description)]"
                     style={{ color: "var(--rx-question)", opacity: 0.75 }}
                   >
-                    {form.description}
+                    {(form.settings?.welcome_description as string) || form.description}
                   </p>
                 ) : null}
               </div>

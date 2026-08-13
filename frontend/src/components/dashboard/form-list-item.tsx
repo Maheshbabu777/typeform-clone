@@ -14,6 +14,15 @@ import {
   Files,
   Blocks
 } from "lucide-react";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { RenameFormModal } from "./rename-form-modal";
 
 interface FormListItemProps {
   form: FormSummary;
@@ -21,9 +30,9 @@ interface FormListItemProps {
 }
 
 export function FormListItem({ form, onUpdate }: FormListItemProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDuplicating, setIsDuplicating] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
 
   const isPublished = form.status === "published";
   const publicUrl = form.public_slug 
@@ -34,7 +43,6 @@ export function FormListItem({ form, onUpdate }: FormListItemProps) {
     if (publicUrl) {
       await navigator.clipboard.writeText(publicUrl);
       alert("Link copied to clipboard!");
-      setIsMenuOpen(false);
     }
   };
 
@@ -60,7 +68,6 @@ export function FormListItem({ form, onUpdate }: FormListItemProps) {
       console.error(err);
       setIsDuplicating(false);
     }
-    setIsMenuOpen(false);
   };
 
   const handleTogglePublish = async () => {
@@ -74,102 +81,107 @@ export function FormListItem({ form, onUpdate }: FormListItemProps) {
     } catch (err) {
       console.error(err);
     }
-    setIsMenuOpen(false);
   };
 
   return (
     <div className="group relative flex items-center justify-between rounded-lg bg-white px-4 py-3 shadow-sm border border-gray-100 transition-shadow hover:shadow-md hover:border-gray-200">
-      <div className="flex w-[40%] items-center gap-4">
-        <Link href={`/forms/${form.id}/edit`} className="block truncate">
-          <h3 className="text-sm font-medium text-[#262627] group-hover:text-[#a25fba] transition-colors truncate">
-            {form.title}
-          </h3>
-        </Link>
+      <Link href={`/forms/${form.id}/edit`} className="absolute inset-0 z-0 rounded-lg" aria-label="Edit form" />
+      
+      <div className="flex w-[40%] items-center gap-4 cursor-pointer relative z-10 pointer-events-none">
+        <h3 className="text-sm font-medium text-[#262627] group-hover:text-[#a25fba] transition-colors truncate">
+          {form.title}
+        </h3>
       </div>
 
       <div className="flex flex-1 items-center justify-between text-sm text-gray-500">
-        <div className="w-20 text-center">
-          {form.response_count > 0 ? form.response_count : "-"}
+        <div className="w-20 flex justify-center relative z-10">
+          <Link href={`/forms/${form.id}/results`} className="min-w-[2rem] text-center rounded border border-gray-200 px-2 py-0.5 hover:bg-gray-50 hover:border-gray-300 transition-colors">
+            {form.response_count > 0 ? form.response_count : "-"}
+          </Link>
         </div>
-        <div className="w-24 text-center">
+        <div className="w-24 flex justify-center relative z-10">
           {/* We don't have completed count directly on FormSummary, using response count for now */}
-          {form.response_count > 0 ? form.response_count : "-"}
+          <Link href={`/forms/${form.id}/results`} className="min-w-[2rem] text-center rounded border border-gray-200 px-2 py-0.5 hover:bg-gray-50 hover:border-gray-300 transition-colors">
+            {form.response_count > 0 ? form.response_count : "-"}
+          </Link>
         </div>
         <div className="w-32 text-center text-xs">
           {new Date(form.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
         </div>
-        <div className="w-24 flex justify-center text-gray-400">
-          <Blocks className="h-4 w-4" />
+        <div className="w-24 flex justify-center text-gray-400 relative z-10">
+          <button 
+            onClick={() => toast(`"Integrations" coming soon!`, { description: "This feature is a placeholder and it's coming soon" })}
+            className="rounded p-1 hover:bg-gray-100 hover:text-gray-700 outline-none transition-colors"
+          >
+            <Blocks className="h-4 w-4" />
+          </button>
         </div>
         
-        <div className="relative w-12 flex justify-end">
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <MoreHorizontal className="h-5 w-5" />
-          </button>
-
-          {isMenuOpen && (
-            <>
-              <div 
-                className="fixed inset-0 z-10" 
-                onClick={() => setIsMenuOpen(false)}
-              />
-              <div className="absolute right-0 top-8 z-20 w-48 rounded-md border border-gray-200 bg-white shadow-lg py-1 text-left">
-                <Link 
-                  href={`/forms/${form.id}/edit`}
-                  className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
+        <div className="relative w-12 flex justify-end z-10">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 outline-none">
+                <MoreHorizontal className="h-5 w-5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem asChild>
+                <Link href={`/forms/${form.id}/edit`} className="flex w-full cursor-pointer items-center gap-2">
                   <Edit3 className="h-4 w-4" /> Edit
                 </Link>
-                <Link 
-                  href={`/forms/${form.id}/results`}
-                  className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/forms/${form.id}/results`} className="flex w-full cursor-pointer items-center gap-2">
                   <BarChart2 className="h-4 w-4" /> Results
                 </Link>
-                
-                {isPublished && (
-                  <button 
-                    onClick={handleCopyLink}
-                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    <Copy className="h-4 w-4" /> Copy link
-                  </button>
-                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => setIsRenaming(true)} 
+                className="cursor-pointer gap-2"
+              >
+                <Edit3 className="h-4 w-4" /> Rename
+              </DropdownMenuItem>
+              
+              {isPublished && (
+                <DropdownMenuItem onClick={handleCopyLink} className="cursor-pointer gap-2">
+                  <Copy className="h-4 w-4" /> Copy link
+                </DropdownMenuItem>
+              )}
 
-                <div className="my-1 border-t border-gray-100" />
-                
-                <button 
-                  onClick={handleTogglePublish}
-                  className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  <Globe className="h-4 w-4" /> 
-                  {isPublished ? "Unpublish" : "Publish"}
-                </button>
-                <button 
-                  onClick={handleDuplicate}
-                  disabled={isDuplicating}
-                  className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
-                >
-                  <Files className="h-4 w-4" /> Duplicate
-                </button>
-                
-                <div className="my-1 border-t border-gray-100" />
-                
-                <button 
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                  className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
-                >
-                  <Trash2 className="h-4 w-4" /> Delete
-                </button>
-              </div>
-            </>
-          )}
+              <DropdownMenuSeparator />
+              
+              <DropdownMenuItem onClick={handleTogglePublish} className="cursor-pointer gap-2">
+                <Globe className="h-4 w-4" /> 
+                {isPublished ? "Unpublish" : "Publish"}
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={handleDuplicate} 
+                disabled={isDuplicating}
+                className="cursor-pointer gap-2"
+              >
+                <Files className="h-4 w-4" /> Duplicate
+              </DropdownMenuItem>
+              
+              <DropdownMenuSeparator />
+              
+              <DropdownMenuItem 
+                onClick={handleDelete} 
+                disabled={isDeleting}
+                className="cursor-pointer gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4" /> Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
+
+      <RenameFormModal 
+        isOpen={isRenaming}
+        onClose={() => setIsRenaming(false)}
+        form={form}
+        onSuccess={onUpdate}
+      />
     </div>
   );
 }

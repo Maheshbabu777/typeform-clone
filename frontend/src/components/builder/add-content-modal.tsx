@@ -20,8 +20,7 @@ import {
   MessageSquare,
   Mail,
   Hash,
-  MapPin,
-  Diamond,
+  MapPin
 } from "lucide-react";
 import { QuestionType } from "@/lib/types";
 
@@ -171,7 +170,6 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
                   <div className="flex items-center gap-2">
                     <span className="h-4 w-4 rounded bg-blue-500" /> Salesforce
                   </div>
-                  <Diamond className="h-4 w-4 text-teal-600" />
                 </div>
               </div>
             </div>
@@ -211,7 +209,7 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
                             <span>{item.label}</span>
                           </div>
                           {item.comingSoon && (
-                            <Diamond className="h-4 w-4 text-teal-600" />
+                            <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400 bg-gray-100 px-2 py-0.5 rounded">Soon</span>
                           )}
                         </button>
                       ))}

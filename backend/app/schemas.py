@@ -29,6 +29,7 @@ class FormUpdate(BaseModel):
     theme_roundness: Literal["none", "small", "large"] | None = None
     theme_font_size: Literal["small", "medium", "large"] | None = None
     thank_you_text: str | None = None
+    settings: dict[str, Any] | None = None
 
 
 class QuestionCreate(BaseModel):

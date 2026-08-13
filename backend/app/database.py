@@ -15,6 +15,8 @@ def connect() -> sqlite3.Connection:
     connection = sqlite3.connect(settings.database_path)
     connection.row_factory = dict_factory
     connection.execute("PRAGMA foreign_keys = ON")
+    connection.execute("PRAGMA journal_mode = WAL")
+    connection.execute("PRAGMA busy_timeout = 5000")
     return connection
 
 

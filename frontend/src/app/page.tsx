@@ -15,12 +15,19 @@ import {
   Menu,
   X
 } from "lucide-react";
+import { toast } from "sonner";
 import { listForms } from "@/lib/api-creator";
 import { FormSummary } from "@/lib/types";
 import { FormSearchTrie } from "@/lib/trie";
 import { FormCard } from "@/components/dashboard/form-card";
 import { FormListItem } from "@/components/dashboard/form-list-item";
 import { CreateFormModal } from "@/components/dashboard/create-form-modal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type ViewMode = "list" | "grid";
 type SortOption = "date_desc" | "date_asc" | "name_asc";
@@ -28,12 +35,31 @@ type SortOption = "date_desc" | "date_asc" | "name_asc";
 export default function DashboardPage() {
   const [forms, setForms] = useState<FormSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
+
+  useEffect(() => {
+    const savedMode = localStorage.getItem("typeform_view_mode");
+    if (savedMode === "grid") {
+      setViewMode("grid");
+    }
+  }, []);
+
+  const handleSetViewMode = (mode: ViewMode) => {
+    setViewMode(mode);
+    localStorage.setItem("typeform_view_mode", mode);
+  };
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>("date_desc");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isPrivateExpanded, setIsPrivateExpanded] = useState(true);
+
+  const handleDummyClick = (featureName: string) => {
+    toast(`"${featureName}" coming soon!`, {
+      description: "This feature is a placeholder and it's coming soon",
+    });
+  };
 
   const fetchForms = async () => {
     try {
@@ -96,12 +122,24 @@ export default function DashboardPage() {
           </button>
         </div>
         <div className="flex items-center gap-2 sm:gap-4 text-sm font-medium text-[#262627]">
-          <button className="hidden sm:flex items-center gap-2 hover:bg-gray-50 px-2 py-1 rounded">
+          <button 
+            onClick={() => handleDummyClick("Integrations")}
+            className="hidden sm:flex items-center gap-2 hover:bg-gray-50 px-2 py-1 rounded"
+          >
             <Settings className="h-4 w-4" /> Integrations
           </button>
-          <button className="text-gray-500 hover:text-gray-700 p-1">
-            <HelpCircle className="h-5 w-5" />
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="text-gray-500 hover:text-gray-700 p-1 outline-none">
+                <HelpCircle className="h-5 w-5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem className="cursor-pointer" onClick={() => handleDummyClick("Help Center")}>Help Center</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => handleDummyClick("Community")}>Community</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => handleDummyClick("Keyboard shortcuts")}>Keyboard shortcuts</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#fbd9e2] text-xs font-semibold text-[#8c3b52] flex-shrink-0">
             MV
           </div>
@@ -160,14 +198,20 @@ export default function DashboardPage() {
               </div>
 
               <div className="pl-6 space-y-1">
-                <button className="flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50">
+                <button 
+                  onClick={() => setIsPrivateExpanded(!isPrivateExpanded)}
+                  className="flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50"
+                >
                   Private
-                  <ChevronDown className="h-3 w-3 text-gray-400" />
+                  <ChevronDown className={`h-3 w-3 text-gray-400 transition-transform ${isPrivateExpanded ? "" : "-rotate-90"}`} />
                 </button>
-                <button className="flex w-full items-center justify-between rounded-md bg-gray-100 px-3 py-1.5 text-sm font-medium text-[#262627]">
-                  My workspace
-                  <span className="text-xs text-gray-500">{forms.length}</span>
-                </button>
+                
+                {isPrivateExpanded && (
+                  <button className="flex w-full items-center justify-between rounded-md bg-gray-100 px-3 py-1.5 text-sm font-medium text-[#262627]">
+                    My workspace
+                    <span className="text-xs text-gray-500">{forms.length}</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -181,10 +225,22 @@ export default function DashboardPage() {
               <h1 className="text-xl sm:text-2xl font-light tracking-tight text-[#262627] truncate">
                 My workspace
               </h1>
-              <button className="hidden sm:block rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700">
-                <MoreHorizontal className="h-5 w-5" />
-              </button>
-              <button className="hidden sm:flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="hidden sm:block rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 outline-none">
+                    <MoreHorizontal className="h-5 w-5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleDummyClick("Workspace settings")}>Workspace settings</DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleDummyClick("Manage members")}>Manage members</DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50" onClick={() => handleDummyClick("Delete workspace")}>Delete workspace</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <button 
+                onClick={() => handleDummyClick("Invite")}
+                className="hidden sm:flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+              >
                 <UserPlus className="h-4 w-4" />
                 Invite
               </button>
@@ -192,46 +248,32 @@ export default function DashboardPage() {
 
             <div className="flex items-center gap-4 self-end sm:self-auto">
               <div className="relative">
-                <button 
-                  onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
-                  className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900"
-                >
-                  {sortBy === "date_desc" && "Date created"}
-                  {sortBy === "date_asc" && "Oldest first"}
-                  {sortBy === "name_asc" && "Alphabetical"}
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-                
-                {isSortDropdownOpen && (
-                  <>
-                    <div className="fixed inset-0 z-10" onClick={() => setIsSortDropdownOpen(false)} />
-                    <div className="absolute right-0 top-6 z-20 w-40 rounded-md border border-gray-200 bg-white shadow-lg py-1">
-                      <button 
-                        onClick={() => { setSortBy("date_desc"); setIsSortDropdownOpen(false); }}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                      >
-                        Date created
-                      </button>
-                      <button 
-                        onClick={() => { setSortBy("date_asc"); setIsSortDropdownOpen(false); }}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                      >
-                        Oldest first
-                      </button>
-                      <button 
-                        onClick={() => { setSortBy("name_asc"); setIsSortDropdownOpen(false); }}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                      >
-                        Alphabetical
-                      </button>
-                    </div>
-                  </>
-                )}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900 outline-none">
+                      {sortBy === "date_desc" && "Date created"}
+                      {sortBy === "date_asc" && "Oldest first"}
+                      {sortBy === "name_asc" && "Alphabetical"}
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem onClick={() => setSortBy("date_desc")}>
+                      Date created
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy("date_asc")}>
+                      Oldest first
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy("name_asc")}>
+                      Alphabetical
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               
               <div className="flex items-center rounded-md border border-[#e6e6e6] bg-white p-0.5 shadow-sm">
                 <button 
-                  onClick={() => setViewMode("list")}
+                  onClick={() => handleSetViewMode("list")}
                   className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors ${
                     viewMode === "list" ? "bg-gray-100 text-[#262627]" : "text-gray-500 hover:text-gray-700"
                   }`}
@@ -240,7 +282,7 @@ export default function DashboardPage() {
                   <span className="hidden sm:inline">List</span>
                 </button>
                 <button 
-                  onClick={() => setViewMode("grid")}
+                  onClick={() => handleSetViewMode("grid")}
                   className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors ${
                     viewMode === "grid" ? "bg-gray-100 text-[#262627]" : "text-gray-500 hover:text-gray-700"
                   }`}
@@ -269,7 +311,7 @@ export default function DashboardPage() {
             </div>
           ) : viewMode === "list" ? (
             <div className="w-full overflow-x-auto no-scrollbar pb-4">
-              <div className="min-w-[700px]">
+              <div className="min-w-[768px]">
                 <div className="flex items-center justify-between px-4 py-2 text-xs font-medium text-gray-400 mb-2">
                   <div className="w-[40%]"></div>
                   <div className="flex flex-1 items-center justify-between">

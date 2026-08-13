@@ -6,6 +6,8 @@ __pycache__/
 .venv/
 *.egg-info/
 *.db
+*.db-shm
+*.db-wal
 
 # Node / Next.js
 node_modules/

@@ -264,14 +264,14 @@ export default function BuilderPage() {
                         className="text-[length:var(--rx-font-question-title)] font-normal"
                         style={{ color: "var(--rx-question)" }}
                       >
-                        {form.title}
+                        {(form.settings?.welcome_title as string) || form.title}
                       </h1>
-                      {form.description && (
+                      {(form.settings?.welcome_description || form.description) && (
                         <p 
                           className="text-[length:var(--rx-font-description)]"
                           style={{ color: "var(--rx-question)", opacity: 0.8 }}
                         >
-                          {form.description}
+                          {(form.settings?.welcome_description as string) || form.description}
                         </p>
                       )}
                       <button
