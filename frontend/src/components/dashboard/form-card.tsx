@@ -82,11 +82,11 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
   };
 
   return (
-    <div className="group relative flex flex-col justify-between rounded-lg border border-[#dedcde] bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+    <div className="group relative flex flex-col justify-between rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-shadow hover:shadow-md">
       <div className="space-y-3">
         <div className="flex items-start justify-between">
           <Link href={`/forms/${form.id}/edit`} className="block w-full">
-            <h3 className="text-lg font-semibold text-[#3c323e] group-hover:text-[#a25fba] transition-colors truncate pr-8">
+            <h3 className="truncate pr-8 text-lg font-semibold text-card-foreground transition-colors group-hover:text-primary">
               {form.title}
             </h3>
           </Link>
@@ -94,7 +94,7 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
           <div className="relative">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="absolute right-0 top-0 rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 outline-none">
+                <button className="absolute right-0 top-0 rounded-md p-1.5 text-muted-foreground outline-none hover:bg-muted hover:text-foreground">
                   <MoreVertical className="h-4 w-4" />
                 </button>
               </DropdownMenuTrigger>
@@ -150,9 +150,11 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-gray-500">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-            isPublished ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
+            isPublished
+              ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+              : "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
           }`}>
             {isPublished ? "Published" : "Draft"}
           </span>
@@ -163,7 +165,7 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
         </div>
       </div>
 
-      <div className="mt-6 border-t border-gray-100 pt-3 text-xs text-gray-400">
+      <div className="mt-6 border-t border-border pt-3 text-xs text-muted-foreground">
         Updated {new Date(form.updated_at).toLocaleDateString()}
       </div>
 

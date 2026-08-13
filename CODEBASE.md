@@ -217,19 +217,31 @@ Creator-facing results, stats, and export routes.
 
 ## Frontend Overview
 
-The frontend has a working respondent flow at `/f/[slug]`. Dashboard, builder, and results screens are still placeholders for later phases.
+The frontend has working creator and respondent surfaces: the dashboard at `/`, builder at `/forms/[id]/edit`, public respondent flow at `/f/[slug]`, and results at `/forms/[id]/results`.
 
 ### `frontend/src/app/layout.tsx`
 
 | Component | Description |
 |---|---|
-| `RootLayout({ children })` | Next.js root layout. Sets the HTML language, imports global CSS, and renders all route content inside `<body>`. |
+| `RootLayout({ children })` | Next.js root layout. Sets the HTML language, imports global CSS, wraps the app in the persistent app-shell theme provider, and renders the global toast outlet. |
+
+### `frontend/src/components/theme/app-theme-provider.tsx`
+
+| Component | Description |
+|---|---|
+| `AppThemeProvider({ children })` | Client wrapper around `next-themes`. Persists the creator app-shell theme under `typeform-app-theme` and applies light/dark classes to `<html>`. |
+
+### `frontend/src/components/theme/theme-toggle.tsx`
+
+| Component | Description |
+|---|---|
+| `ThemeToggle({ className })` | Small icon button that toggles the persisted app-shell theme between light and dark. It waits until mount before reading the resolved theme to avoid hydration mismatch. |
 
 ### `frontend/src/app/page.tsx`
 
 | Component | Description |
 |---|---|
-| `DashboardPage()` | Current placeholder dashboard route for `/`. Establishes the app-shell look and confirms the frontend scaffold is rendering. |
+| `DashboardPage()` | Creator dashboard route for `/`. Fetches forms, supports search/sort, toggles list/grid views, opens create-form flow, and renders Typeform-style workspace navigation plus form actions. |
 
 ### `frontend/src/app/forms/[id]/edit/page.tsx`
 
@@ -454,8 +466,10 @@ These are not runtime functions, but they shape how the frontend is built.
 
 ## Important Implementation Notes
 
-- The backend currently stores form-level `description`, `thank_you_text`, `theme_roundness`, and `theme_font_size` in `form.settings` JSON because the final schema has no `form.description` column.
+- The backend currently stores form-level `description`, `thank_you_text`, `theme_roundness`, `theme_font_size`, and `skip_welcome_screen` in `form.settings` JSON because the final schema has no separate typed columns for those settings.
 - The backend always enables `PRAGMA foreign_keys = ON` per connection through `connect()`.
 - Public form submission does not require `/start` to succeed first. If `response_id` is absent, `/submit` creates and completes a response in one request.
 - Logic rules are evaluated server-side during public submission so skipped required questions do not block valid submissions.
+- Server-side answer validation covers required visited questions, email, number, website URL, date, phone number, choice membership, yes/no, and rating range.
+- Dark mode is a persistent creator app-shell preference. Public respondent pages remain controlled by each form's stored theme colors through `.rx-theme` variables.
 - `AGENTS.md` is the decision log; this file is the code-reading guide.

@@ -33,12 +33,12 @@ export function CreateFormModal({ isOpen, onClose }: CreateFormModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl animate-in fade-in zoom-in duration-200">
+      <div className="w-full max-w-md animate-in rounded-xl border border-border bg-card p-6 text-card-foreground shadow-xl fade-in zoom-in duration-200">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-[#3c323e]">Create new form</h2>
+          <h2 className="text-xl font-semibold text-card-foreground">Create new form</h2>
           <button 
             onClick={onClose}
-            className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             <X className="h-5 w-5" />
           </button>
@@ -46,7 +46,7 @@ export function CreateFormModal({ isOpen, onClose }: CreateFormModalProps) {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-2 block text-sm font-medium text-foreground">
               Form Title
             </label>
             <input
@@ -54,7 +54,7 @@ export function CreateFormModal({ isOpen, onClose }: CreateFormModalProps) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Customer Feedback Survey"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-[#a25fba] focus:outline-none focus:ring-1 focus:ring-[#a25fba]"
+              className="w-full rounded-md border border-input bg-background px-4 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               autoFocus
             />
           </div>
@@ -63,7 +63,7 @@ export function CreateFormModal({ isOpen, onClose }: CreateFormModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="rounded-md px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
               disabled={isSubmitting}
             >
               Cancel
@@ -71,7 +71,7 @@ export function CreateFormModal({ isOpen, onClose }: CreateFormModalProps) {
             <button
               type="submit"
               disabled={!title.trim() || isSubmitting}
-              className="flex items-center gap-2 rounded-md bg-[#a25fba] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#9454ab] disabled:opacity-50"
+              className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
             >
               {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
               Create

@@ -38,7 +38,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!response.ok) {
     let detail = response.statusText;
     try {
-      const body = (await response.json()) as { detail?: any };
+      const body = (await response.json()) as { detail?: unknown };
       if (body.detail) {
         detail = typeof body.detail === 'string' ? body.detail : JSON.stringify(body.detail);
       }

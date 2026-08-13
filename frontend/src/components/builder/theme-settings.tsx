@@ -29,12 +29,12 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-[350px] border-l border-[#dedcde] bg-white shadow-2xl flex flex-col">
-      <div className="flex items-center justify-between border-b border-[#dedcde] p-4">
-        <h2 className="text-lg font-semibold text-[#3c323e]">Theme Settings</h2>
+    <div className="fixed inset-y-0 right-0 z-50 flex w-[350px] flex-col border-l border-border bg-card text-card-foreground shadow-2xl">
+      <div className="flex items-center justify-between border-b border-border p-4">
+        <h2 className="text-lg font-semibold text-card-foreground">Theme Settings</h2>
         <button
           onClick={onClose}
-          className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+          className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           <X className="h-5 w-5" />
         </button>
@@ -44,18 +44,18 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
         
         {/* Colors */}
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Colors</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Colors</h3>
           <div className="space-y-3">
             {COLOR_KEYS.map(({ key, label }) => (
               <div key={key} className="flex items-center justify-between">
-                <label className="text-sm font-medium text-[#3c323e]">{label}</label>
+                <label className="text-sm font-medium text-card-foreground">{label}</label>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500 uppercase w-16">{form.theme_colors[key]}</span>
+                  <span className="w-16 text-xs uppercase text-muted-foreground">{form.theme_colors[key]}</span>
                   <input
                     type="color"
                     value={form.theme_colors[key]}
                     onChange={(e) => handleColorChange(key, e.target.value)}
-                    className="h-8 w-8 cursor-pointer rounded border border-gray-200 bg-transparent p-0"
+                    className="h-8 w-8 cursor-pointer rounded border border-border bg-transparent p-0"
                   />
                 </div>
               </div>
@@ -64,8 +64,8 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
         </div>
 
         {/* Roundness */}
-        <div className="space-y-4 pt-4 border-t border-[#dedcde]">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Shape</h3>
+        <div className="space-y-4 border-t border-border pt-4">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Shape</h3>
           <div className="flex gap-2">
             {(["none", "small", "large"] as ThemeRoundness[]).map((r) => (
               <button
@@ -73,8 +73,8 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
                 onClick={() => onUpdate({ theme_roundness: r })}
                 className={`flex-1 rounded-md border py-2 text-sm capitalize transition-colors ${
                   form.theme_roundness === r
-                    ? "border-[#a25fba] bg-[#a25fba]/10 text-[#a25fba] font-medium"
-                    : "border-[#dedcde] hover:bg-gray-50"
+                    ? "border-primary bg-primary/10 font-medium text-primary"
+                    : "border-border hover:bg-muted"
                 }`}
               >
                 {r}
@@ -84,8 +84,8 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
         </div>
 
         {/* Font Size */}
-        <div className="space-y-4 pt-4 border-t border-[#dedcde]">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Typography</h3>
+        <div className="space-y-4 border-t border-border pt-4">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Typography</h3>
           <div className="flex gap-2">
             {(["small", "medium", "large"] as ThemeFontSize[]).map((f) => (
               <button
@@ -93,8 +93,8 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
                 onClick={() => onUpdate({ theme_font_size: f })}
                 className={`flex-1 rounded-md border py-2 text-sm capitalize transition-colors ${
                   form.theme_font_size === f
-                    ? "border-[#a25fba] bg-[#a25fba]/10 text-[#a25fba] font-medium"
-                    : "border-[#dedcde] hover:bg-gray-50"
+                    ? "border-primary bg-primary/10 font-medium text-primary"
+                    : "border-border hover:bg-muted"
                 }`}
               >
                 {f}

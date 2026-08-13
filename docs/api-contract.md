@@ -9,7 +9,7 @@ The backend is environment-agnostic. It returns `public_slug` values, and the fr
 | POST | `/forms` | `{title}` | Creates a draft for creator `id = 1`. |
 | GET | `/forms` | - | Lists forms with status and response count. |
 | GET | `/forms/{id}` | - | Returns full form including questions, logic, and theme. |
-| PUT | `/forms/{id}` | `{title?, description?, theme_colors?, theme_roundness?, theme_font_size?, thank_you_text?}` | Partial update. |
+| PUT | `/forms/{id}` | `{title?, description?, theme_colors?, theme_roundness?, theme_font_size?, thank_you_text?, settings?}` | Partial update. `settings` is merged into stored form settings for keys such as `skip_welcome_screen`. |
 | DELETE | `/forms/{id}` | - | Cascades form data. |
 | POST | `/forms/{id}/duplicate` | - | Deep-copies form, questions, and remapped logic rules. |
 | POST | `/forms/{id}/publish` | - | Generates `public_slug` only if absent. |
@@ -36,7 +36,7 @@ The backend is environment-agnostic. It returns `public_slug` values, and the fr
 | POST | `/public/{slug}/start` | - | Creates a partial response and returns `{response_id}`. |
 | POST | `/public/{slug}/submit` | `{response_id?, answers: [{question_id, value}]}` | Completes an existing response or creates-and-completes one if `response_id` is absent. |
 
-Server-side validation remains required for public submission, including required visited questions, email format, numeric parsing, and logic-path validation.
+Server-side validation remains required for public submission, including required visited questions, email format, numeric parsing, website URL, date, phone number, choice membership, rating range, and logic-path validation.
 
 ## Results
 

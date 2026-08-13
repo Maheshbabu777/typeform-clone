@@ -57,3 +57,67 @@ def test_form_lifecycle_smoke(tmp_path, monkeypatch):
     assert duplicate["public_slug"] is None
     assert duplicate["questions"][0]["id"] != question["id"]
 
+
+def test_form_settings_and_expanded_answer_validation(tmp_path, monkeypatch):
+    database_path = tmp_path / "test.db"
+    monkeypatch.setenv("DATABASE_URL", str(database_path))
+    get_settings.cache_clear()
+    init_database()
+
+    client = TestClient(app)
+
+    form = client.post("/forms", json={"title": "Validation check"}).json()
+    updated = client.put(
+        f"/forms/{form['id']}",
+        json={"settings": {"skip_welcome_screen": True}},
+    ).json()
+    assert updated["settings"]["skip_welcome_screen"] is True
+
+    website = client.post(
+        f"/forms/{form['id']}/questions",
+        json={"type": "website", "title": "Website", "required": True},
+    ).json()
+    choice = client.post(
+        f"/forms/{form['id']}/questions",
+        json={
+            "type": "multiple_choice",
+            "title": "Pick one",
+            "required": True,
+            "options": ["Alpha", "Beta"],
+        },
+    ).json()
+    rating = client.post(
+        f"/forms/{form['id']}/questions",
+        json={
+            "type": "rating",
+            "title": "Rate it",
+            "required": True,
+            "settings": {"max": 3},
+        },
+    ).json()
+
+    slug = client.post(f"/forms/{form['id']}/publish").json()["public_slug"]
+    invalid_response = client.post(
+        f"/public/{slug}/submit",
+        json={
+            "answers": [
+                {"question_id": website["id"], "value": "not-a-url"},
+                {"question_id": choice["id"], "value": "Gamma"},
+                {"question_id": rating["id"], "value": "5"},
+            ]
+        },
+    )
+    assert invalid_response.status_code == 400
+
+    valid_response = client.post(
+        f"/public/{slug}/submit",
+        json={
+            "answers": [
+                {"question_id": website["id"], "value": "https://example.com"},
+                {"question_id": choice["id"], "value": "Alpha"},
+                {"question_id": rating["id"], "value": "3"},
+            ]
+        },
+    )
+    assert valid_response.status_code == 201
+    assert valid_response.json()["completed"] is True

@@ -84,34 +84,34 @@ export function FormListItem({ form, onUpdate }: FormListItemProps) {
   };
 
   return (
-    <div className="group relative flex items-center justify-between rounded-lg bg-white px-4 py-3 shadow-sm border border-gray-100 transition-shadow hover:shadow-md hover:border-gray-200">
+    <div className="group relative flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3 text-card-foreground shadow-sm transition-shadow hover:border-border/80 hover:shadow-md">
       <Link href={`/forms/${form.id}/edit`} className="absolute inset-0 z-0 rounded-lg" aria-label="Edit form" />
       
       <div className="flex w-[40%] items-center gap-4 cursor-pointer relative z-10 pointer-events-none">
-        <h3 className="text-sm font-medium text-[#262627] group-hover:text-[#a25fba] transition-colors truncate">
+        <h3 className="truncate text-sm font-medium text-card-foreground transition-colors group-hover:text-primary">
           {form.title}
         </h3>
       </div>
 
-      <div className="flex flex-1 items-center justify-between text-sm text-gray-500">
+      <div className="flex flex-1 items-center justify-between text-sm text-muted-foreground">
         <div className="w-20 flex justify-center relative z-10">
-          <Link href={`/forms/${form.id}/results`} className="min-w-[2rem] text-center rounded border border-gray-200 px-2 py-0.5 hover:bg-gray-50 hover:border-gray-300 transition-colors">
+          <Link href={`/forms/${form.id}/results`} className="min-w-[2rem] rounded border border-border px-2 py-0.5 text-center transition-colors hover:bg-muted">
             {form.response_count > 0 ? form.response_count : "-"}
           </Link>
         </div>
         <div className="w-24 flex justify-center relative z-10">
           {/* We don't have completed count directly on FormSummary, using response count for now */}
-          <Link href={`/forms/${form.id}/results`} className="min-w-[2rem] text-center rounded border border-gray-200 px-2 py-0.5 hover:bg-gray-50 hover:border-gray-300 transition-colors">
+          <Link href={`/forms/${form.id}/results`} className="min-w-[2rem] rounded border border-border px-2 py-0.5 text-center transition-colors hover:bg-muted">
             {form.response_count > 0 ? form.response_count : "-"}
           </Link>
         </div>
         <div className="w-32 text-center text-xs">
           {new Date(form.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
         </div>
-        <div className="w-24 flex justify-center text-gray-400 relative z-10">
+        <div className="relative z-10 flex w-24 justify-center text-muted-foreground">
           <button 
             onClick={() => toast(`"Integrations" coming soon!`, { description: "This feature is a placeholder and it's coming soon" })}
-            className="rounded p-1 hover:bg-gray-100 hover:text-gray-700 outline-none transition-colors"
+            className="rounded p-1 outline-none transition-colors hover:bg-muted hover:text-foreground"
           >
             <Blocks className="h-4 w-4" />
           </button>
@@ -120,7 +120,7 @@ export function FormListItem({ form, onUpdate }: FormListItemProps) {
         <div className="relative w-12 flex justify-end z-10">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 outline-none">
+              <button className="rounded p-1 text-muted-foreground outline-none hover:bg-muted hover:text-foreground">
                 <MoreHorizontal className="h-5 w-5" />
               </button>
             </DropdownMenuTrigger>

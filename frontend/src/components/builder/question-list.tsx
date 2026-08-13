@@ -21,7 +21,6 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
-  MoreVertical,
   Trash2,
   GripVertical,
   Plus,
@@ -33,10 +32,7 @@ import {
   Hash,
   ToggleLeft,
   Star,
-  CreditCard,
-  Upload,
   FileText,
-  Flag,
   Phone,
   Globe,
   Calendar,
@@ -45,13 +41,13 @@ import {
 
 interface QuestionListProps {
   questions: Question[];
-  formSettings: any;
+  formSettings: Record<string, unknown>;
   activeQuestionId: number | "welcome" | "thank_you" | null;
   onSelect: (id: number | "welcome" | "thank_you") => void;
-  onAdd: (type: QuestionType | "welcome" | "thank_you") => void;
+  onAdd: (type: QuestionType) => void;
   onDelete: (id: number) => void;
   onReorder: (orderedIds: number[]) => void;
-  onUpdateSettings: (settings: any) => void;
+  onUpdateSettings: (settings: Record<string, unknown>) => void;
 }
 
 const QUESTION_TYPE_ICONS: Record<string, React.ReactNode> = {
@@ -97,13 +93,13 @@ function SortableQuestionItem({
       ref={setNodeRef}
       style={style}
       className={`group relative flex items-center gap-2 rounded-lg p-2 transition-colors ${
-        isActive ? "bg-gray-100" : "hover:bg-gray-50"
-      } ${isDragging ? "opacity-50 shadow-md bg-white" : ""}`}
+        isActive ? "bg-muted" : "hover:bg-muted/70"
+      } ${isDragging ? "bg-card opacity-50 shadow-md" : ""}`}
     >
       <div
         {...attributes}
         {...listeners}
-        className="cursor-grab text-gray-400 hover:text-gray-600 active:cursor-grabbing"
+        className="cursor-grab text-muted-foreground hover:text-foreground active:cursor-grabbing"
       >
         <GripVertical className="h-4 w-4" />
       </div>
@@ -112,13 +108,13 @@ function SortableQuestionItem({
         onClick={onSelect}
         className="flex flex-1 items-center gap-3 overflow-hidden text-left"
       >
-        <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-gray-200 text-xs font-medium text-gray-600">
+        <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-muted text-xs font-medium text-muted-foreground">
           {index + 1}
         </div>
-        <div className="flex-shrink-0 text-gray-500">
+        <div className="flex-shrink-0 text-muted-foreground">
           {QUESTION_TYPE_ICONS[question.type]}
         </div>
-        <span className="truncate text-sm font-medium text-[#3c323e]">
+        <span className="truncate text-sm font-medium text-card-foreground">
           {question.title || "Untitled Question"}
         </span>
       </button>
@@ -128,7 +124,7 @@ function SortableQuestionItem({
           e.stopPropagation();
           onDelete();
         }}
-        className="flex-shrink-0 rounded p-1 text-gray-400 opacity-0 hover:bg-red-50 hover:text-red-600 group-hover:opacity-100"
+        className="flex-shrink-0 rounded p-1 text-muted-foreground opacity-0 hover:bg-red-50 hover:text-red-600 group-hover:opacity-100 dark:hover:bg-red-950"
         title="Delete Question"
       >
         <Trash2 className="h-4 w-4" />
@@ -168,12 +164,12 @@ export function QuestionList({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="p-4 flex items-center justify-between border-b border-[#dedcde]">
-        <h2 className="text-sm font-semibold text-[#3c323e]">Content</h2>
+      <div className="flex items-center justify-between border-b border-border p-4">
+        <h2 className="text-sm font-semibold text-card-foreground">Content</h2>
         
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center gap-1 rounded bg-[#a25fba] px-2 py-1 text-xs font-medium text-white hover:bg-[#9454ab] transition-all duration-300 ease-in-out"
+          className="flex items-center gap-1 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground transition-all duration-300 ease-in-out hover:bg-primary/90"
         >
           <Plus className="h-4 w-4" /> Add
         </button>
@@ -185,13 +181,13 @@ export function QuestionList({
           <button
             onClick={() => onSelect("welcome")}
             className={`group mb-4 relative flex items-center gap-3 rounded-lg p-2 text-left transition-colors ${
-              activeQuestionId === "welcome" ? "bg-gray-100" : "hover:bg-gray-50"
+              activeQuestionId === "welcome" ? "bg-muted" : "hover:bg-muted/70"
             }`}
           >
-            <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-gray-200 text-xs font-medium text-gray-600">
+            <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-muted text-xs font-medium text-muted-foreground">
               <FileText className="h-4 w-4" />
             </div>
-            <span className="text-sm font-medium text-[#3c323e] flex-1">Welcome Screen</span>
+            <span className="flex-1 text-sm font-medium text-card-foreground">Welcome Screen</span>
             
             <div
               onClick={(e) => {
@@ -201,7 +197,7 @@ export function QuestionList({
                   onSelect(questions.length > 0 ? questions[0].id : "thank_you");
                 }
               }}
-              className="flex-shrink-0 rounded p-1 text-gray-400 opacity-0 hover:bg-red-50 hover:text-red-600 group-hover:opacity-100 transition-all duration-200"
+              className="flex-shrink-0 rounded p-1 text-muted-foreground opacity-0 transition-all duration-200 hover:bg-red-50 hover:text-red-600 group-hover:opacity-100 dark:hover:bg-red-950"
               title="Delete Welcome Screen"
             >
               <Trash2 className="h-4 w-4" />
@@ -223,7 +219,7 @@ export function QuestionList({
                 />
               ))}
               {questions.length === 0 && (
-                <div className="p-4 text-center text-sm text-gray-500">
+                <div className="p-4 text-center text-sm text-muted-foreground">
                   No questions yet. Click Add to start.
                 </div>
               )}

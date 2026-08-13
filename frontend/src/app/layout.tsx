@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AppThemeProvider } from "@/components/theme/app-theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Typeform Clone",
   description: "A polished Typeform-style form builder and respondent experience.",
 };
-
-import { Toaster } from "@/components/ui/sonner";
 
 export default function RootLayout({
   children,
@@ -14,10 +14,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        {children}
-        <Toaster />
+        <AppThemeProvider>
+          {children}
+          <Toaster />
+        </AppThemeProvider>
       </body>
     </html>
   );

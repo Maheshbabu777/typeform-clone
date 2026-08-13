@@ -100,23 +100,23 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 md:p-8 animate-in fade-in duration-200">
-      <div className="flex h-full max-h-[800px] w-full max-w-5xl flex-col rounded-xl bg-white shadow-2xl">
+      <div className="flex h-full max-h-[800px] w-full max-w-5xl flex-col rounded-xl border border-border bg-card text-card-foreground shadow-2xl">
         {/* Header Tabs */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-6">
+        <div className="flex items-center justify-between border-b border-border px-6">
           <div className="flex gap-6">
-            <button className="border-b-2 border-[#3c323e] py-4 text-sm font-semibold text-[#3c323e]">
+            <button className="border-b-2 border-foreground py-4 text-sm font-semibold text-foreground">
               Add form elements
             </button>
-            <button className="py-4 text-sm font-medium text-gray-400 cursor-not-allowed">
+            <button className="cursor-not-allowed py-4 text-sm font-medium text-muted-foreground">
               Import questions
             </button>
-            <button className="py-4 text-sm font-medium text-gray-400 cursor-not-allowed">
+            <button className="cursor-not-allowed py-4 text-sm font-medium text-muted-foreground">
               Create with AI
             </button>
           </div>
           <button
             onClick={onClose}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+            className="rounded p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <X className="h-5 w-5" />
           </button>
@@ -124,32 +124,32 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
 
         <div className="flex flex-1 overflow-hidden">
           {/* Left Sidebar */}
-          <div className="w-[280px] border-r border-gray-100 bg-gray-50/30 p-6 flex flex-col gap-6">
+          <div className="flex w-[280px] flex-col gap-6 border-r border-border bg-muted/30 p-6">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search form elements"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-full border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm outline-none focus:border-[#a25fba] focus:ring-1 focus:ring-[#a25fba] transition-all"
+                className="w-full rounded-full border border-input bg-background py-2 pl-9 pr-4 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
 
             <div>
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Recommended
               </h3>
               <div className="flex flex-col gap-2">
                 <button 
                   onClick={() => handleAdd(CATEGORIES[1].elements[0])}
-                  className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-2.5 text-left text-sm font-medium text-[#3c323e] hover:border-[#a25fba] hover:text-[#a25fba] transition-all"
+                  className="flex items-center gap-3 rounded-lg border border-border bg-card p-2.5 text-left text-sm font-medium text-card-foreground transition-all hover:border-primary hover:text-primary"
                 >
                   <List className="h-4 w-4" /> Multiple Choice
                 </button>
                 <button 
                   onClick={() => handleAdd(CATEGORIES[3].elements[1])}
-                  className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-2.5 text-left text-sm font-medium text-[#3c323e] hover:border-[#a25fba] hover:text-[#a25fba] transition-all"
+                  className="flex items-center gap-3 rounded-lg border border-border bg-card p-2.5 text-left text-sm font-medium text-card-foreground transition-all hover:border-primary hover:text-primary"
                 >
                   <Type className="h-4 w-4" /> Short Text
                 </button>
@@ -157,16 +157,16 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
             </div>
 
             <div>
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Connect to apps
               </h3>
               <div className="flex flex-col gap-2 opacity-60">
-                <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-2.5 text-sm">
+                <div className="flex items-center justify-between rounded-lg border border-border bg-card p-2.5 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="h-4 w-4 rounded bg-orange-500" /> Hubspot
                   </div>
                 </div>
-                <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-2.5 text-sm">
+                <div className="flex items-center justify-between rounded-lg border border-border bg-card p-2.5 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="h-4 w-4 rounded bg-blue-500" /> Salesforce
                   </div>
@@ -187,7 +187,7 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
 
                 return (
                   <div key={category.title}>
-                    <h3 className="mb-4 text-sm font-semibold text-[#3c323e]">
+                    <h3 className="mb-4 text-sm font-semibold text-card-foreground">
                       {category.title}
                     </h3>
                     <div className="flex flex-col gap-1">
@@ -199,17 +199,17 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
                           className={`group flex items-center justify-between rounded-md p-2 text-left text-sm transition-all duration-200 ${
                             item.disabled
                               ? "cursor-not-allowed opacity-50"
-                              : "hover:bg-purple-50 text-gray-600 hover:text-[#a25fba]"
+                              : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
                           }`}
                         >
                           <div className="flex items-center gap-3 font-medium">
-                            <div className={`flex items-center justify-center rounded p-1.5 ${item.disabled ? 'bg-gray-100 text-gray-500' : 'bg-purple-100 text-[#a25fba] group-hover:bg-[#a25fba] group-hover:text-white transition-colors'}`}>
+                            <div className={`flex items-center justify-center rounded p-1.5 ${item.disabled ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground'}`}>
                               {item.icon}
                             </div>
                             <span>{item.label}</span>
                           </div>
                           {item.comingSoon && (
-                            <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400 bg-gray-100 px-2 py-0.5 rounded">Soon</span>
+                            <span className="rounded bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Soon</span>
                           )}
                         </button>
                       ))}
@@ -220,8 +220,8 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
             </div>
             
             {search && !CATEGORIES.some(c => c.elements.some(e => e.label.toLowerCase().includes(search.toLowerCase()))) && (
-              <div className="flex h-40 items-center justify-center text-gray-500">
-                No form elements found matching "{search}"
+              <div className="flex h-40 items-center justify-center text-muted-foreground">
+                No form elements found matching &quot;{search}&quot;
               </div>
             )}
           </div>

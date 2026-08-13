@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { PublicForm, Question, LogicRule } from "@/lib/types";
+import { PublicForm, QuestionType, QuestionUpdatePayload } from "@/lib/types";
 import { getForm, updateForm, publishForm, unpublishForm, createQuestion, updateQuestion, deleteQuestion, reorderQuestions } from "@/lib/api-creator";
 import { ThemeProvider } from "@/components/respondent/theme-provider";
 import { QuestionRenderer } from "@/components/respondent/question-renderer";
@@ -12,6 +12,7 @@ import { WelcomeEditor } from "@/components/builder/welcome-editor";
 import { ThankYouEditor } from "@/components/builder/thank-you-editor";
 import { ThemeSettings } from "@/components/builder/theme-settings";
 import { Link as LinkIcon, Check } from "lucide-react";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export default function BuilderPage() {
   const params = useParams();
@@ -24,31 +25,29 @@ export default function BuilderPage() {
   const [hasCopied, setHasCopied] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
 
+  const loadForm = useCallback(async () => {
+    try {
+      const data = await getForm(formId);
+      setForm(data);
+      setActiveQuestionId((current) => current ?? "welcome");
+    } catch (error) {
+      console.error("Failed to load form:", error);
+      // Fallback to dashboard if not found
+      router.push("/");
+    }
+  }, [formId, router]);
+
   useEffect(() => {
     if (isNaN(formId)) {
       router.push("/");
       return;
     }
     loadForm();
-  }, [formId, router]);
-
-  const loadForm = async () => {
-    try {
-      const data = await getForm(formId);
-      setForm(data);
-      if (activeQuestionId === null) {
-        setActiveQuestionId("welcome");
-      }
-    } catch (error) {
-      console.error("Failed to load form:", error);
-      // Fallback to dashboard if not found
-      router.push("/");
-    }
-  };
+  }, [formId, loadForm, router]);
 
   if (!form) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f7f7f8]">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-[color:var(--rx-answer)] border-t-transparent" />
       </div>
     );
@@ -80,7 +79,7 @@ export default function BuilderPage() {
     }
   };
 
-  const handleCreateQuestion = async (type: any) => {
+  const handleCreateQuestion = async (type: QuestionType) => {
     try {
       const isChoice = ["multiple_choice", "dropdown"].includes(type);
       const newQ = await createQuestion(form.id, {
@@ -98,7 +97,7 @@ export default function BuilderPage() {
     }
   };
 
-  const handleUpdateQuestion = async (id: number, updates: any) => {
+  const handleUpdateQuestion = async (id: number, updates: QuestionUpdatePayload) => {
     setForm((prev) => {
       if (!prev) return prev;
       return {
@@ -145,30 +144,31 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="flex h-screen w-full flex-col bg-[#f7f7f8] text-[#3c323e]">
+    <div className="flex h-screen w-full flex-col bg-background text-foreground">
       {/* Top Bar */}
-      <header className="flex h-14 items-center justify-between border-b border-[#dedcde] bg-white px-4 shadow-sm">
+      <header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 text-card-foreground shadow-sm">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => router.push("/")}
-            className="text-sm font-medium hover:text-[#9454ab] transition-all duration-300 ease-in-out"
+            className="text-sm font-medium text-muted-foreground transition-all duration-300 ease-in-out hover:text-primary"
           >
             ← Dashboard
           </button>
-          <div className="h-4 w-[1px] bg-[#dedcde]" />
+          <div className="h-4 w-[1px] bg-border" />
           <input
             type="text"
             value={form.title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            className="border-none bg-transparent text-lg font-semibold focus:outline-none focus:ring-0 transition-colors duration-300"
+            className="border-none bg-transparent text-lg font-semibold text-foreground transition-colors duration-300 focus:outline-none focus:ring-0"
             placeholder="Form Title"
           />
         </div>
         
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <button
             onClick={() => setIsThemeOpen(true)}
-            className="rounded-md px-3 py-1.5 text-sm font-medium hover:bg-gray-100 transition-all duration-300 ease-in-out"
+            className="rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-300 ease-in-out hover:bg-muted"
           >
             Theme
           </button>
@@ -177,7 +177,7 @@ export default function BuilderPage() {
             <button
               onClick={handlePublishToggle}
               disabled={isPublishing}
-              className="rounded-md px-4 py-1.5 text-sm font-medium text-white transition-all duration-300 ease-in-out bg-[#a25fba] hover:bg-[#9454ab] disabled:opacity-50"
+              className="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-all duration-300 ease-in-out hover:bg-primary/90 disabled:opacity-50"
             >
               Publish
             </button>
@@ -189,7 +189,7 @@ export default function BuilderPage() {
                   setHasCopied(true);
                   setTimeout(() => setHasCopied(false), 2000);
                 }}
-                className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 transition-colors"
+                className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 title="Copy link"
               >
                 {hasCopied ? <Check className="h-4 w-4 text-green-500" /> : <LinkIcon className="h-4 w-4" />}
@@ -200,7 +200,7 @@ export default function BuilderPage() {
                    setTimeout(() => setIsPublishing(false), 800);
                 }}
                 disabled={isPublishing}
-                className="rounded-md px-4 py-1.5 text-sm font-medium text-white transition-all duration-300 ease-in-out bg-gray-900 hover:bg-gray-800 disabled:opacity-50"
+                className="rounded-md bg-foreground px-4 py-1.5 text-sm font-medium text-background transition-all duration-300 ease-in-out hover:opacity-90 disabled:opacity-50"
               >
                 {isPublishing ? "Publishing..." : "Publish edits"}
               </button>
@@ -213,7 +213,7 @@ export default function BuilderPage() {
       <div className="flex flex-1 overflow-x-auto overflow-y-hidden no-scrollbar">
         <div className="flex flex-1 min-w-[1024px] h-full">
           {/* Left Rail (Question List) */}
-          <div className="w-[280px] flex-shrink-0 border-r border-[#dedcde] bg-white overflow-y-auto">
+          <div className="w-[280px] flex-shrink-0 overflow-y-auto border-r border-border bg-card">
             <QuestionList 
               questions={form.questions}
               formSettings={form.settings}
@@ -230,7 +230,7 @@ export default function BuilderPage() {
           </div>
 
           {/* Center Pane (Editor) */}
-          <div className="flex w-[350px] flex-shrink-0 flex-col border-r border-[#dedcde] bg-white shadow-sm z-10 overflow-y-auto">
+          <div className="z-10 flex w-[350px] flex-shrink-0 flex-col overflow-y-auto border-r border-border bg-card shadow-sm">
             {activeQuestionId === "welcome" ? (
               <WelcomeEditor form={form} onChange={(updates) => {
                 setForm({ ...form, ...updates });
@@ -247,14 +247,14 @@ export default function BuilderPage() {
                 onChange={(updates) => handleUpdateQuestion(activeQuestion.id, updates)}
               />
             ) : (
-              <div className="flex h-full items-center justify-center p-8 text-center text-[#655d67]">
+              <div className="flex h-full items-center justify-center p-8 text-center text-muted-foreground">
                 <p>Select a question to edit, or add a new one.</p>
               </div>
             )}
           </div>
 
           {/* Right Pane (Live Preview) */}
-          <div className="flex-1 bg-[#f7f7f8] p-4 lg:p-8 flex items-center justify-center overflow-y-auto overflow-x-hidden relative">
+          <div className="relative flex flex-1 items-center justify-center overflow-x-hidden overflow-y-auto bg-background p-4 lg:p-8">
             <div className="w-full max-w-4xl h-full bg-white shadow-xl rounded-2xl overflow-hidden relative flex flex-col rx-theme">
               <ThemeProvider form={form}>
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 relative">

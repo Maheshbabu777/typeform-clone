@@ -7,6 +7,7 @@ import { PublicForm, ResponseSummary, QuestionStats } from "@/lib/types";
 import { SummaryView } from "@/components/results/summary-view";
 import { ResponsesTable } from "@/components/results/responses-table";
 import { ArrowLeft, Download, BarChart2, Table as TableIcon } from "lucide-react";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 type Tab = "summary" | "responses";
 
@@ -44,19 +45,19 @@ export default function ResultsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f7f7f8]">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#3c323e] border-t-transparent" />
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-muted border-t-foreground" />
       </div>
     );
   }
 
   if (!form) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#f7f7f8]">
-        <h2 className="text-xl font-semibold text-[#3c323e]">Form not found</h2>
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background">
+        <h2 className="text-xl font-semibold text-foreground">Form not found</h2>
         <button
           onClick={() => router.push("/")}
-          className="mt-4 text-[#a25fba] hover:underline"
+          className="mt-4 text-primary hover:underline"
         >
           Return to Dashboard
         </button>
@@ -65,31 +66,32 @@ export default function ResultsPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f7f7f8]">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       {/* Header */}
-      <header className="flex h-16 items-center justify-between border-b border-[#dedcde] bg-white px-6 shadow-sm">
+      <header className="flex h-16 items-center justify-between border-b border-border bg-card px-6 text-card-foreground shadow-sm">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => router.push("/")}
-            className="flex items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-[#3c323e]"
+            className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
             Dashboard
           </button>
-          <div className="h-4 w-px bg-gray-300" />
-          <h1 className="text-lg font-semibold text-[#3c323e] truncate max-w-sm">
+          <div className="h-4 w-px bg-border" />
+          <h1 className="max-w-sm truncate text-lg font-semibold text-foreground">
             {form.title}
           </h1>
-          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
             Results
           </span>
         </div>
 
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <a
             href={getCsvExportUrl(formId)}
             download
-            className="flex items-center gap-2 rounded-md bg-white border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 shadow-sm"
+            className="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted"
           >
             <Download className="h-4 w-4" />
             Export CSV
@@ -98,14 +100,14 @@ export default function ResultsPage() {
       </header>
 
       {/* Tabs */}
-      <div className="border-b border-[#dedcde] bg-white px-6">
+      <div className="border-b border-border bg-card px-6">
         <nav className="flex space-x-8">
           <button
             onClick={() => setActiveTab("summary")}
             className={`flex items-center gap-2 border-b-2 py-4 px-1 text-sm font-medium transition-colors ${
               activeTab === "summary"
-                ? "border-[#3c323e] text-[#3c323e]"
-                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                ? "border-foreground text-foreground"
+                : "border-transparent text-muted-foreground hover:border-border hover:text-foreground"
             }`}
           >
             <BarChart2 className="h-4 w-4" />
@@ -115,8 +117,8 @@ export default function ResultsPage() {
             onClick={() => setActiveTab("responses")}
             className={`flex items-center gap-2 border-b-2 py-4 px-1 text-sm font-medium transition-colors ${
               activeTab === "responses"
-                ? "border-[#3c323e] text-[#3c323e]"
-                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                ? "border-foreground text-foreground"
+                : "border-transparent text-muted-foreground hover:border-border hover:text-foreground"
             }`}
           >
             <TableIcon className="h-4 w-4" />

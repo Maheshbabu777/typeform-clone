@@ -9,14 +9,16 @@ interface PublicFormPageProps {
 
 export default async function PublicFormPage({ params }: PublicFormPageProps) {
   const { slug } = await params;
+  let form;
 
   try {
-    const form = await getPublicForm(slug);
-    return <RespondentFlow form={form} slug={slug} />;
+    form = await getPublicForm(slug);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) {
       notFound();
     }
     throw error;
   }
+
+  return <RespondentFlow form={form} slug={slug} />;
 }

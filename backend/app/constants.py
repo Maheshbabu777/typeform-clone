@@ -28,5 +28,6 @@ DEFAULT_FORM_SETTINGS = {
     "thank_you_text": "Thanks for completing this form.",
     "theme_roundness": "small",
     "theme_font_size": "medium",
+    "skip_welcome_screen": False,
 }
 

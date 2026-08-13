@@ -160,6 +160,30 @@ Do not record tiny mechanical edits unless they clarify a broader decision.
 
 **Rationale:** The user felt the previous dashboard looked "too basic" and "AI-generated." Implementing Typeform's signature stark contrast (light gray backgrounds, pure white panels, thin 1px borders) makes it look authentic. The "Team", "Contacts", and "Automations" tabs were intentionally deferred as visual placeholders to focus on core functional engineering.
 
+### 2026-08-13 - Frontend quality gates - Use ESLint CLI with Next flat config
+
+**Decision:** Replace the obsolete `next lint` script with `eslint src next.config.ts tailwind.config.ts postcss.config.mjs eslint.config.mjs`, backed by `eslint.config.mjs` that imports Next 16's flat config exports directly.
+
+**Rationale:** After upgrading to Next 16, `next lint` is no longer the right validation command and was interpreted as a project directory. Direct ESLint keeps linting available for app source and config files without scanning generated folders or dependency trees.
+
+**Tradeoffs / Follow-up:** The config disables `react-hooks/set-state-in-effect` because the current app intentionally hydrates local UI state and fetches data in effects. Keep more specific lint rules enabled, and prefer fixing real type/unused/JSX warnings rather than broad suppressions.
+
+### 2026-08-13 - Pre-logic cleanup - Tighten settings persistence and server validation
+
+**Decision:** Before starting logic-jump UI and dark theme work, clean up known correctness gaps: document the current implemented frontend state, keep `skip_welcome_screen` in default form settings, and expand backend public-answer validation for website, date, phone, choice membership, yes/no, and rating range.
+
+**Rationale:** Logic jumps and dark theme build on the existing builder/respondent foundation. Fixing persistence and validation first prevents hidden regressions in later work and keeps documentation aligned with reality.
+
+**Tradeoffs / Follow-up:** Phone validation remains intentionally lightweight rather than country-specific. If production-grade phone validation becomes required, add a dedicated library and country/region handling.
+
+### 2026-08-13 - Dark Mode - Persist app-shell theme separately from respondent themes
+
+**Decision:** Add persistent dark mode through `next-themes` using the `typeform-app-theme` storage key. The toggle is available in Dashboard, Builder, and Results app-shell headers. App-shell surfaces use shared theme tokens, while public respondent forms continue to use per-form RX theme CSS variables.
+
+**Rationale:** The user wants dark mode to persist everywhere in the creator experience. Keeping the app-shell theme separate from the respondent theme prevents a creator's dark preference from breaking public form colors selected in the builder.
+
+**Tradeoffs / Follow-up:** Some deep, decorative UI details may still need small contrast polish during visual QA, but the main shell, cards, modals, builder panes, and results tables now read from dark-aware tokens.
+
 ### 2026-08-13 - Backend - SQLite Concurrency tuning
 
 **Decision:** Added `PRAGMA journal_mode=WAL` and `PRAGMA busy_timeout=5000` to the SQLite connection initialization in `database.py`.

@@ -49,18 +49,18 @@ export function ResponsesTable({ form, responses }: ResponsesTableProps) {
 
   if (responses.length === 0) {
     return (
-      <div className="rounded-lg border border-[#dedcde] bg-white p-12 text-center shadow-sm">
-        <h3 className="text-lg font-medium text-[#3c323e] mb-2">No responses yet</h3>
-        <p className="text-gray-500">When people submit your form, their answers will appear here.</p>
+      <div className="rounded-lg border border-border bg-card p-12 text-center text-card-foreground shadow-sm">
+        <h3 className="mb-2 text-lg font-medium text-card-foreground">No responses yet</h3>
+        <p className="text-muted-foreground">When people submit your form, their answers will appear here.</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg border border-[#dedcde] bg-white shadow-sm overflow-hidden">
+    <div className="overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="bg-gray-50 text-gray-600 border-b border-[#dedcde]">
+          <thead className="border-b border-border bg-muted text-muted-foreground">
             <tr>
               <th className="whitespace-nowrap px-6 py-4 font-semibold">#</th>
               <th className="whitespace-nowrap px-6 py-4 font-semibold">Submitted At</th>
@@ -71,12 +71,12 @@ export function ResponsesTable({ form, responses }: ResponsesTableProps) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-border">
             {isLoading ? (
               <tr>
-                <td colSpan={form.questions.length + 2} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={form.questions.length + 2} className="px-6 py-8 text-center text-muted-foreground">
                   <div className="flex items-center justify-center gap-2">
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-muted border-t-muted-foreground" />
                     Loading response data...
                   </div>
                 </td>
@@ -94,19 +94,19 @@ export function ResponsesTable({ form, responses }: ResponsesTableProps) {
                 }
 
                 return (
-                  <tr key={response.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
+                  <tr key={response.id} className="transition-colors hover:bg-muted/50">
+                    <td className="whitespace-nowrap px-6 py-4 font-medium text-card-foreground">
                       {responses.length - index}
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-gray-500">
+                    <td className="whitespace-nowrap px-6 py-4 text-muted-foreground">
                       {response.completed_at 
                         ? new Date(response.completed_at).toLocaleString() 
-                        : <span className="text-amber-600 text-xs font-medium px-2 py-1 bg-amber-50 rounded-full">Partial</span>}
+                        : <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-600 dark:bg-amber-950 dark:text-amber-300">Partial</span>}
                     </td>
                     
                     {form.questions.map(q => (
-                      <td key={q.id} className="px-6 py-4 text-gray-700 truncate max-w-[250px]" title={answersMap[q.id] || ""}>
-                        {answersMap[q.id] || <span className="text-gray-300">-</span>}
+                      <td key={q.id} className="max-w-[250px] truncate px-6 py-4 text-card-foreground" title={answersMap[q.id] || ""}>
+                        {answersMap[q.id] || <span className="text-muted-foreground">-</span>}
                       </td>
                     ))}
                   </tr>
