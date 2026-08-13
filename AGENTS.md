@@ -223,3 +223,11 @@ Do not record tiny mechanical edits unless they clarify a broader decision.
 **Rationale:** The user correctly identified that native confirm boxes break the immersion of the custom UI and that we should leverage our existing shadcn/ui ecosystem to prevent repeating raw Tailwind HTML boilerplate. The DeleteFormModal enforces this pattern.
 
 **Tradeoffs / Follow-up:** Any future modals (like RenameFormModal or CreateFormModal rewrites) should follow this exact pattern using src/components/ui/dialog.tsx for consistency and accessibility.
+
+### 2026-08-14 - Typography - Global DM Sans adoption and weight reduction
+
+**Decision:** Switched the entire application font to DM Sans globally via `globals.css` and the Next.js `layout.tsx` body class. Replaced heavy `font-bold` and `font-semibold` utility classes with `font-medium` across the Builder UI and Results page.
+
+**Rationale:** The user wanted to elevate the overall typography and sizes across the site. DM Sans has a much wider geometry and higher blackness at bold weights compared to system-ui. By globally applying it and simultaneously reducing raw font-weights, the interface maintains the minimalist, premium Typeform aesthetic without text feeling heavy or shouty.
+
+**Tradeoffs / Follow-up:** The `layout.tsx` body now enforces `.font-sans`. If future components (like code blocks) need monospaced fonts, they must explicitly use `.font-mono` to override the body inheritance.

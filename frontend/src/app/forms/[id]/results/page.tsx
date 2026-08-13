@@ -78,7 +78,7 @@ export default function ResultsPage() {
             Dashboard
           </button>
           <div className="h-4 w-px bg-border" />
-          <h1 className="max-w-sm truncate text-lg font-semibold text-foreground">
+          <h1 className="max-w-sm truncate text-lg font-medium text-foreground">
             {form.title}
           </h1>
           <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">

@@ -167,7 +167,7 @@ export function LogicJumpEditor({ form, question, onFormChange }: LogicJumpEdito
           <GitBranch className="h-4 w-4" />
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-card-foreground">Logic jumps</h3>
+          <h3 className="text-sm font-medium text-card-foreground">Logic jumps</h3>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
             Send people to a later question, or straight to the ending, when this answer matches.
           </p>
@@ -180,7 +180,7 @@ export function LogicJumpEditor({ form, question, onFormChange }: LogicJumpEdito
             <div key={rule.id} className="overflow-hidden rounded-lg border border-border bg-card text-sm shadow-sm">
               <div className="border-b border-border bg-background/60 px-3 py-2">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     <CornerDownRight className="h-3.5 w-3.5" />
                     Rule
                   </div>

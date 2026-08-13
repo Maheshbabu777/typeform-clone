@@ -165,7 +165,7 @@ export function QuestionList({
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="text-sm font-semibold text-card-foreground">Content</h2>
+        <h2 className="text-sm font-medium text-card-foreground">Content</h2>
         
         <button
           onClick={() => setIsAddModalOpen(true)}

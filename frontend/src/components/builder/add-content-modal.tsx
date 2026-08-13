@@ -104,7 +104,7 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
         {/* Header Tabs */}
         <div className="flex items-center justify-between border-b border-border px-6">
           <div className="flex gap-6">
-            <button className="border-b-2 border-foreground py-4 text-sm font-semibold text-foreground">
+            <button className="border-b-2 border-foreground py-4 text-sm font-medium text-foreground">
               Add form elements
             </button>
             <button className="cursor-not-allowed py-4 text-sm font-medium text-muted-foreground">
@@ -137,7 +137,7 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
             </div>
 
             <div>
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Recommended
               </h3>
               <div className="flex flex-col gap-2">
@@ -157,7 +157,7 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
             </div>
 
             <div>
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Connect to apps
               </h3>
               <div className="flex flex-col gap-2 opacity-60">
@@ -187,7 +187,7 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
 
                 return (
                   <div key={category.title}>
-                    <h3 className="mb-4 text-sm font-semibold text-card-foreground">
+                    <h3 className="mb-4 text-sm font-medium text-card-foreground">
                       {category.title}
                     </h3>
                     <div className="flex flex-col gap-1">
@@ -209,7 +209,7 @@ export function AddContentModal({ isOpen, onClose, onAdd }: AddContentModalProps
                             <span>{item.label}</span>
                           </div>
                           {item.comingSoon && (
-                            <span className="rounded bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Soon</span>
+                            <span className="rounded bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Soon</span>
                           )}
                         </button>
                       ))}

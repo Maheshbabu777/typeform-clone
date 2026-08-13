@@ -24,7 +24,7 @@ export function SummaryView({ responses, stats }: SummaryViewProps) {
             <Users className="h-5 w-5" />
             <h3 className="text-sm font-medium">Total Responses</h3>
           </div>
-          <p className="text-3xl font-bold text-card-foreground">{totalViews}</p>
+          <p className="text-3xl font-medium tracking-tight text-card-foreground">{totalViews}</p>
         </div>
 
         <div className="rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm">
@@ -32,14 +32,14 @@ export function SummaryView({ responses, stats }: SummaryViewProps) {
             <CheckCircle className="h-5 w-5" />
             <h3 className="text-sm font-medium">Completion Rate</h3>
           </div>
-          <p className="text-3xl font-bold text-card-foreground">{completionRate}%</p>
+          <p className="text-3xl font-medium tracking-tight text-card-foreground">{completionRate}%</p>
         </div>
       </div>
 
       {/* Question breakdown */}
       <div className="overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-sm">
         <div className="border-b border-border bg-muted px-6 py-4">
-          <h3 className="text-sm font-semibold text-card-foreground">Question Analysis</h3>
+          <h3 className="text-sm font-medium text-card-foreground">Question Analysis</h3>
         </div>
         
         <div className="divide-y divide-border">

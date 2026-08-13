@@ -44,7 +44,7 @@ export function WelcomeEditor({ form, onChange }: WelcomeEditorProps) {
   return (
     <div className="flex h-full flex-col">
       <div className="border-b border-border p-4">
-        <h2 className="text-sm font-semibold text-card-foreground">Welcome Screen</h2>
+        <h2 className="text-sm font-medium text-card-foreground">Welcome Screen</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">

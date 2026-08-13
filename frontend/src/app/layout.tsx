@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className="font-sans antialiased bg-background text-foreground">
         <AppThemeProvider>
           {children}
           <Toaster />

@@ -64,7 +64,7 @@ export function QuestionEditor({ form, question, onChange, onFormChange }: Quest
   return (
     <div className="flex h-full flex-col">
       <div className="border-b border-border p-4">
-        <h2 className="text-sm font-semibold text-card-foreground">Question Settings</h2>
+        <h2 className="text-sm font-medium text-card-foreground">Question Settings</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -170,7 +170,7 @@ export function QuestionEditor({ form, question, onChange, onFormChange }: Quest
 
         {/* Logic Jumps */}
         <div className="border-t border-border pt-6 pb-6">
-          <h3 className="mb-2 text-sm font-semibold text-card-foreground">Logic Jumps</h3>
+          <h3 className="mb-2 text-sm font-medium text-card-foreground">Logic Jumps</h3>
           <LogicJumpEditor 
             form={form} 
             question={question} 

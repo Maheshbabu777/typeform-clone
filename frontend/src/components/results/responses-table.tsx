@@ -62,10 +62,10 @@ export function ResponsesTable({ form, responses }: ResponsesTableProps) {
         <table className="w-full text-left text-sm">
           <thead className="border-b border-border bg-muted text-muted-foreground">
             <tr>
-              <th className="whitespace-nowrap px-6 py-4 font-semibold">#</th>
-              <th className="whitespace-nowrap px-6 py-4 font-semibold">Submitted At</th>
+              <th className="whitespace-nowrap px-6 py-4 font-medium">#</th>
+              <th className="whitespace-nowrap px-6 py-4 font-medium">Submitted At</th>
               {form.questions.map((q, i) => (
-                <th key={q.id} className="whitespace-nowrap px-6 py-4 font-semibold max-w-[200px] truncate" title={q.title}>
+                <th key={q.id} className="whitespace-nowrap px-6 py-4 font-medium max-w-[200px] truncate" title={q.title}>
                   {i + 1}. {q.title}
                 </th>
               ))}

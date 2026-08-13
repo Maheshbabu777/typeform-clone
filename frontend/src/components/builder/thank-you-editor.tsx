@@ -34,7 +34,7 @@ export function ThankYouEditor({ form, onChange }: ThankYouEditorProps) {
   return (
     <div className="flex h-full flex-col">
       <div className="border-b border-border p-4">
-        <h2 className="text-sm font-semibold text-card-foreground">Quiz Endings</h2>
+        <h2 className="text-sm font-medium text-card-foreground">Quiz Endings</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">

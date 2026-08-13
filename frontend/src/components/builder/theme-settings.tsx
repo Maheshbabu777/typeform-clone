@@ -31,7 +31,7 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
   return (
     <div className="fixed inset-y-0 right-0 z-50 flex w-[350px] flex-col border-l border-border bg-card text-card-foreground shadow-2xl">
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="text-lg font-semibold text-card-foreground">Theme Settings</h2>
+        <h2 className="text-lg font-medium text-card-foreground">Theme Settings</h2>
         <button
           onClick={onClose}
           className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -44,7 +44,7 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
         
         {/* Colors */}
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Colors</h3>
+          <h3 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">Colors</h3>
           <div className="space-y-3">
             {COLOR_KEYS.map(({ key, label }) => (
               <div key={key} className="flex items-center justify-between">
@@ -65,7 +65,7 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
 
         {/* Roundness */}
         <div className="space-y-4 border-t border-border pt-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Shape</h3>
+          <h3 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">Shape</h3>
           <div className="flex gap-2">
             {(["none", "small", "large"] as ThemeRoundness[]).map((r) => (
               <button
@@ -85,7 +85,7 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
 
         {/* Font Size */}
         <div className="space-y-4 border-t border-border pt-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Typography</h3>
+          <h3 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">Typography</h3>
           <div className="flex gap-2">
             {(["small", "medium", "large"] as ThemeFontSize[]).map((f) => (
               <button

@@ -159,7 +159,7 @@ export default function BuilderPage() {
             type="text"
             value={form.title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            className="border-none bg-transparent text-lg font-semibold text-foreground transition-colors duration-300 focus:outline-none focus:ring-0"
+            className="border-none bg-transparent text-lg font-medium text-foreground transition-colors duration-300 focus:outline-none focus:ring-0"
             placeholder="Form Title"
           />
         </div>
