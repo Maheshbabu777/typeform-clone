@@ -94,7 +94,7 @@ export function QuestionEditor({ question, onChange }: QuestionEditorProps) {
 
         {/* Required Toggle */}
         {question.type !== "statement" && (
-          <div className="flex items-center justify-between border-b border-[#dedcde] pb-6">
+          <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-[#3c323e]">Required</label>
             <button
               onClick={() => onChange({ required: !question.required })}

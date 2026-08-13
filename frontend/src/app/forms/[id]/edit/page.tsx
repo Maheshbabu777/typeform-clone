@@ -210,101 +210,104 @@ export default function BuilderPage() {
       </header>
 
       {/* Main Builder Area */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left Rail (Question List) */}
-        <div className="w-[280px] flex-shrink-0 border-r border-[#dedcde] bg-white overflow-y-auto">
-          <QuestionList 
-            questions={form.questions}
-            formSettings={form.settings}
-            activeQuestionId={activeQuestionId}
-            onSelect={setActiveQuestionId}
-            onAdd={handleCreateQuestion}
-            onDelete={handleDeleteQuestion}
-            onReorder={handleReorder}
-            onUpdateSettings={(settings) => {
-              setForm({ ...form, settings });
-              updateForm(form.id, { settings });
-            }}
-          />
-        </div>
-
-        {/* Center Pane (Editor) */}
-        <div className="flex w-[350px] flex-shrink-0 flex-col border-r border-[#dedcde] bg-white shadow-sm z-10 overflow-y-auto">
-          {activeQuestionId === "welcome" ? (
-            <WelcomeEditor form={form} onChange={(updates) => {
-              setForm({ ...form, ...updates });
-              updateForm(form.id, updates);
-            }} />
-          ) : activeQuestionId === "thank_you" ? (
-            <ThankYouEditor form={form} onChange={(updates) => {
-              setForm({ ...form, ...updates });
-              updateForm(form.id, updates);
-            }} />
-          ) : activeQuestion ? (
-            <QuestionEditor 
-              question={activeQuestion}
-              onChange={(updates) => handleUpdateQuestion(activeQuestion.id, updates)}
+      <div className="flex flex-1 overflow-x-auto overflow-y-hidden no-scrollbar">
+        <div className="flex flex-1 min-w-[1024px] h-full">
+          {/* Left Rail (Question List) */}
+          <div className="w-[280px] flex-shrink-0 border-r border-[#dedcde] bg-white overflow-y-auto">
+            <QuestionList 
+              questions={form.questions}
+              formSettings={form.settings}
+              activeQuestionId={activeQuestionId}
+              onSelect={setActiveQuestionId}
+              onAdd={handleCreateQuestion}
+              onDelete={handleDeleteQuestion}
+              onReorder={handleReorder}
+              onUpdateSettings={(settings) => {
+                setForm({ ...form, settings });
+                updateForm(form.id, { settings });
+              }}
             />
-          ) : (
-            <div className="flex h-full items-center justify-center p-8 text-center text-[#655d67]">
-              <p>Select a question to edit, or add a new one.</p>
-            </div>
-          )}
-        </div>
+          </div>
 
-        {/* Right Pane (Live Preview) */}
-        <div className="flex-1 bg-[#f7f7f8] p-4 lg:p-8 flex items-center justify-center overflow-y-auto overflow-x-hidden relative">
-          <div className="w-full max-w-4xl h-full bg-white shadow-xl rounded-2xl overflow-hidden relative flex flex-col rx-theme">
-            <ThemeProvider form={form}>
-              <div className="flex-1 overflow-y-auto p-4 md:p-8 relative">
-                {activeQuestionId === "welcome" ? (
-                  <div className="flex h-full items-center justify-center flex-col gap-4 text-center">
-                    <h1 
-                      className="text-[length:var(--rx-font-question-title)] font-normal"
-                      style={{ color: "var(--rx-question)" }}
-                    >
-                      {form.title}
-                    </h1>
-                    {form.description && (
-                      <p 
-                        className="text-[length:var(--rx-font-description)]"
-                        style={{ color: "var(--rx-question)", opacity: 0.8 }}
-                      >
-                        {form.description}
-                      </p>
-                    )}
-                    <button
-                      className="px-4 py-2 text-sm font-medium transition-all duration-300 ease-in-out mt-4 rounded-[var(--rx-radius)] hover:opacity-90"
-                      style={{
-                        backgroundColor: "var(--rx-button)",
-                        color: "var(--rx-button-content)",
-                      }}
-                    >
-                      Start
-                    </button>
-                  </div>
-                ) : activeQuestionId === "thank_you" ? (
-                  <div className="flex h-full items-center justify-center flex-col gap-4 text-center">
-                    <h1 
-                      className="text-[length:var(--rx-font-question-title)] font-normal"
-                      style={{ color: "var(--rx-question)" }}
-                    >
-                      {form.thank_you_text || "Thanks for completing this form"}
-                    </h1>
-                  </div>
-                ) : activeQuestion ? (
-                  <QuestionRenderer
-                    question={activeQuestion}
-                    questionNumber={form.questions.findIndex((q) => q.id === activeQuestion.id) + 1}
-                    value={""}
-                    error={null}
-                    onChange={() => {}}
-                    onSubmit={() => {}}
-                    showOkButton={true}
-                  />
-                ) : null}
+          {/* Center Pane (Editor) */}
+          <div className="flex w-[350px] flex-shrink-0 flex-col border-r border-[#dedcde] bg-white shadow-sm z-10 overflow-y-auto">
+            {activeQuestionId === "welcome" ? (
+              <WelcomeEditor form={form} onChange={(updates) => {
+                setForm({ ...form, ...updates });
+                updateForm(form.id, updates);
+              }} />
+            ) : activeQuestionId === "thank_you" ? (
+              <ThankYouEditor form={form} onChange={(updates) => {
+                setForm({ ...form, ...updates });
+                updateForm(form.id, updates);
+              }} />
+            ) : activeQuestion ? (
+              <QuestionEditor 
+                question={activeQuestion}
+                onChange={(updates) => handleUpdateQuestion(activeQuestion.id, updates)}
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center p-8 text-center text-[#655d67]">
+                <p>Select a question to edit, or add a new one.</p>
               </div>
-            </ThemeProvider>
+            )}
+          </div>
+
+          {/* Right Pane (Live Preview) */}
+          <div className="flex-1 bg-[#f7f7f8] p-4 lg:p-8 flex items-center justify-center overflow-y-auto overflow-x-hidden relative">
+            <div className="w-full max-w-4xl h-full bg-white shadow-xl rounded-2xl overflow-hidden relative flex flex-col rx-theme">
+              <ThemeProvider form={form}>
+                <div className="flex-1 overflow-y-auto p-4 md:p-8 relative">
+                  {activeQuestionId === "welcome" ? (
+                    <div className="flex h-full items-center justify-center flex-col gap-4 text-center">
+                      <h1 
+                        className="text-[length:var(--rx-font-question-title)] font-normal"
+                        style={{ color: "var(--rx-question)" }}
+                      >
+                        {form.title}
+                      </h1>
+                      {form.description && (
+                        <p 
+                          className="text-[length:var(--rx-font-description)]"
+                          style={{ color: "var(--rx-question)", opacity: 0.8 }}
+                        >
+                          {form.description}
+                        </p>
+                      )}
+                      <button
+                        className="px-4 py-2 text-sm font-medium transition-all duration-300 ease-in-out mt-4 rounded-[var(--rx-radius)] hover:opacity-90"
+                        style={{
+                          backgroundColor: "var(--rx-button)",
+                          color: "var(--rx-button-content)",
+                        }}
+                      >
+                        Start
+                      </button>
+                    </div>
+                  ) : activeQuestionId === "thank_you" ? (
+                    <div className="flex h-full items-center justify-center flex-col gap-4 text-center">
+                      <h1 
+                        className="text-[length:var(--rx-font-question-title)] font-normal"
+                        style={{ color: "var(--rx-question)" }}
+                      >
+                        {form.thank_you_text || "Thanks for completing this form"}
+                      </h1>
+                    </div>
+                  ) : activeQuestion ? (
+                    <QuestionRenderer
+                      question={activeQuestion}
+                      questionNumber={form.questions.findIndex((q) => q.id === activeQuestion.id) + 1}
+                      value={""}
+                      error={null}
+                      onChange={() => {}}
+                      onSubmit={() => {}}
+                      isSubmitting={false}
+                      showOkButton={true}
+                    />
+                  ) : null}
+                </div>
+              </ThemeProvider>
+            </div>
           </div>
         </div>
       </div>

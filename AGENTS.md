@@ -145,3 +145,17 @@ Do not record tiny mechanical edits unless they clarify a broader decision.
 **Rationale:** The 500ms debounce previously caused a race condition where a user's active typing (e.g., typing a space) would be overwritten by the debounced API update coming back as a prop change, deleting trailing spaces or causing a "flicker". Syncing only on ID change resolves this.
 
 **Tradeoffs / Follow-up:** If external forces (like real-time collaboration) were ever added, this component would not see updates from other users while focused. Since this is a single-creator application, this tradeoff is entirely acceptable to ensure a smooth typing experience.
+
+### 2026-08-13 - Phase 4 - Dashboard and Results Implementation
+
+**Decision:** Built the Creator Dashboard (`/`) using a FormCard grid and a `CreateFormModal`. Implemented the Results view (`/forms/[id]/results`) with a Summary tab and a Responses tab. Leveraged the existing backend API scaffold for `duplicate`, `responses`, `stats`, and `export.csv`.
+
+**Rationale:** The dashboard replaces the Phase 0 placeholder and provides real control over form states (Draft/Published) and duplication/deletion. The Results view provides crucial analytics and individual response reviews.
+
+**Tradeoffs / Follow-up:** Currently the Response table fetches individual response details sequentially on the client due to the scaffold's `/responses/{id}` architecture. In a high-traffic production system, we'd add a joined `list_full_responses` backend endpoint. Dark Mode for the App Shell was deferred to focus on core functionality.
+
+### 2026-08-13 - Dashboard V2 Redesign
+
+**Decision:** Overhauled the generic dashboard into a true Typeform clone matching a provided screenshot. Added a global App Shell header, redesigned the sidebar (Workspaces, Ask AI), and implemented a toggleable List View (`FormListItem`) as the new default over the Grid view.
+
+**Rationale:** The user felt the previous dashboard looked "too basic" and "AI-generated." Implementing Typeform's signature stark contrast (light gray backgrounds, pure white panels, thin 1px borders) makes it look authentic. The "Team", "Contacts", and "Automations" tabs were intentionally deferred as visual placeholders to focus on core functional engineering.
