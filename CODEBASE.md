@@ -368,6 +368,50 @@ Client-side logic-jump path evaluation, mirrored from the backend.
 |---|---|
 | `AddContentModal({ isOpen, onClose, onSelectType })` | Full-screen modal that displays all available question types in categorized grids, including placeholders for "Coming Soon" elements. |
 
+### `frontend/src/components/builder/thank-you-editor.tsx`
+
+| Component | Description |
+|---|---|
+| `ThankYouEditor({ form, onChange })` | Specialized editor for the form's `thank_you_text`. Also debounces API updates. |
+
+## Dashboard & Results Components
+
+### `frontend/src/components/dashboard/form-card.tsx`
+
+| Component | Description |
+|---|---|
+| `FormCard({ form, onUpdate })` | Renders a card for a single form on the dashboard, with a dropdown menu for duplicate, delete, publish, and copy link actions. |
+
+### `frontend/src/components/dashboard/form-list-item.tsx`
+
+| Component | Description |
+|---|---|
+| `FormListItem({ form, onUpdate })` | The default List View rendering of a form row on the dashboard, matching the authentic Typeform design. |
+
+### `frontend/src/components/dashboard/create-form-modal.tsx`
+
+| Component | Description |
+|---|---|
+| `CreateFormModal({ isOpen, onClose })` | A modal to create a new form and immediately redirect to its builder. |
+
+### `frontend/src/components/dashboard/coming-soon-panel.tsx`
+
+| Component | Description |
+|---|---|
+| `ComingSoonPanel({ title, description })` | A generic placeholder UI for undeveloped dashboard sections like "Team" and "Integrations". |
+
+### `frontend/src/components/results/summary-view.tsx`
+
+| Component | Description |
+|---|---|
+| `SummaryView({ form, responses, stats })` | Renders high-level metrics (Total Responses, Completion Rate) and a visual bar chart breakdown of answers for each question. |
+
+### `frontend/src/components/results/responses-table.tsx`
+
+| Component | Description |
+|---|---|
+| `ResponsesTable({ form, responses })` | Renders a full data table showing every respondent's individual answers row-by-row. |
+
 ### `frontend/src/components/builder/question-editor.tsx`
 
 | Component | Description |

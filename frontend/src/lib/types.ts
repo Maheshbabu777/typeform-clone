@@ -9,6 +9,7 @@ export type QuestionType =
   | "phone_number"
   | "website"
   | "date"
+  | "yes_no"
   | "statement";
 export type ThemeRoundness = "none" | "small" | "large";
 export type ThemeFontSize = "small" | "medium" | "large";
@@ -63,6 +64,34 @@ export interface PublicForm {
   logic: LogicRule[];
 }
 
+export interface FormSummary extends Omit<PublicForm, "questions" | "logic"> {
+  response_count: number;
+}
+
+export interface Answer {
+  id: number;
+  response_id: number;
+  question_id: number;
+  value: string;
+  title?: string;
+  type?: QuestionType;
+}
+
+export interface ResponseSummary {
+  id: number;
+  form_id: number;
+  started_at: string;
+  completed_at: string | null;
+  answer_count: number;
+  answers?: Answer[];
+}
+
+export interface QuestionStats {
+  question_id: number;
+  title: string;
+  counts: Array<{ value: string; count: number }>;
+}
+
 export interface PublicAnswerPayload {
   question_id: number;
   value: string;
@@ -80,6 +109,7 @@ export interface FormUpdatePayload {
   theme_roundness?: ThemeRoundness;
   theme_font_size?: ThemeFontSize;
   thank_you_text?: string;
+  settings?: Record<string, unknown>;
 }
 
 export interface QuestionCreatePayload {

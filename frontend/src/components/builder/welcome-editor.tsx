@@ -20,9 +20,9 @@ export function WelcomeEditor({ form, onChange }: WelcomeEditorProps) {
   useEffect(() => {
     const handler = setTimeout(() => {
       const proposedTitle = title || "Untitled Form";
-      const proposedDesc = description || null;
+      const proposedDesc = description || undefined;
       
-      if (proposedTitle !== form.title || proposedDesc !== (form.description || null)) {
+      if (proposedTitle !== form.title || proposedDesc !== (form.description || undefined)) {
         onChange({ 
           title: proposedTitle, 
           description: proposedDesc 

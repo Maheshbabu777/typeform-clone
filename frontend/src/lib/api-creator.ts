@@ -6,6 +6,9 @@ import type {
   QuestionUpdatePayload,
   LogicRule,
   LogicRuleCreatePayload,
+  FormSummary,
+  ResponseSummary,
+  QuestionStats,
 } from "@/lib/types";
 
 // Reuse the same base logic as the public API but without throwing away the error logic.
@@ -55,6 +58,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 // ---------------------------------------------------------------------------
 // Forms
 // ---------------------------------------------------------------------------
+
+export async function listForms(): Promise<FormSummary[]> {
+  return request<FormSummary[]>("/forms");
+}
 
 export async function createForm(title: string): Promise<PublicForm> {
   return request<PublicForm>("/forms", {
@@ -132,4 +139,20 @@ export async function createLogicRule(formId: number, payload: LogicRuleCreatePa
 
 export async function deleteLogicRule(logicId: number): Promise<void> {
   return request<void>(`/logic/${logicId}`, { method: "DELETE" });
+}
+
+// ---------------------------------------------------------------------------
+// Results & Analytics
+// ---------------------------------------------------------------------------
+
+export async function listFormResponses(formId: number): Promise<ResponseSummary[]> {
+  return request<ResponseSummary[]>(`/forms/${formId}/responses`);
+}
+
+export async function getFormStats(formId: number): Promise<QuestionStats[]> {
+  return request<QuestionStats[]>(`/forms/${formId}/stats`);
+}
+
+export function getCsvExportUrl(formId: number): string {
+  return `${API_BASE}/forms/${formId}/export.csv`;
 }

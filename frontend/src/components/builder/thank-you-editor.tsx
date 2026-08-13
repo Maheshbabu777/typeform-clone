@@ -17,9 +17,12 @@ export function ThankYouEditor({ form, onChange }: ThankYouEditorProps) {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      const proposedText = text || null;
-      if (proposedText !== (form.thank_you_text || null)) {
-        onChange({ thank_you_text: proposedText });
+      const proposedText = text || undefined;
+      if (proposedText !== (form.thank_you_text || undefined)) {
+        onChange({ 
+          thank_you_text: proposedText,
+          description: form.settings?.thank_you_description as string || undefined 
+        });
       }
     }, 500);
     return () => clearTimeout(handler);
