@@ -4,8 +4,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.routers import forms, logic_rules, public, questions, results
+from app.routers import ai, forms, logic_rules, public, questions, results
 from app.db_init import init_database
+
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.extension import _rate_limit_exceeded_handler
 
 settings = get_settings()
 
@@ -31,6 +35,10 @@ def health_check() -> dict[str, str]:
     return {"status": "ok"}
 
 
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.state.limiter = ai.limiter
+
+app.include_router(ai.router)
 app.include_router(forms.router)
 app.include_router(questions.router)
 app.include_router(logic_rules.router)

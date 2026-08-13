@@ -4,6 +4,13 @@ import React, { useState, useEffect } from "react";
 import { PublicForm, Question, QuestionUpdatePayload } from "@/lib/types";
 import { Trash2, Plus } from "lucide-react";
 import { LogicJumpEditor } from "./logic-jump-editor";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface QuestionEditorProps {
   form: PublicForm;
@@ -156,15 +163,21 @@ export function QuestionEditor({ form, question, onChange, onFormChange }: Quest
             <label className="block text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Scale Maximum
             </label>
-            <select
+            <Select
               value={question.settings?.max as string || "5"}
-              onChange={(e) => onChange({ settings: { ...question.settings, max: e.target.value } })}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              onValueChange={(val) => onChange({ settings: { ...question.settings, max: val } })}
             >
-              {[3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                <option key={n} value={n.toString()}>{n}</option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full bg-background">
+                <SelectValue placeholder="Select max scale" />
+              </SelectTrigger>
+              <SelectContent>
+                {[3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                  <SelectItem key={n} value={n.toString()}>
+                    {n}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         )}
 

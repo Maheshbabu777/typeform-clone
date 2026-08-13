@@ -31,6 +31,13 @@ Record decisions that affect:
 
 Do not record tiny mechanical edits unless they clarify a broader decision.
 
+### 2026-08-14 - AI Form Generation - Implementation
+**Decision:** Integrated `google-genai` SDK using the `gemini-flash-latest` model to power the `/api/v1/forms/generate` endpoint. Replaced the requested "glowing ✨" UI with a minimal, native secondary button in the dashboard, matching the Typeform aesthetic. Added a 3 req/min IP rate limit using `slowapi`.
+
+**Rationale:** The new `google-genai` SDK's Pydantic `response_schema` natively enforces structured form generation, preventing UI crashes. `gemini-flash-latest` was chosen as it robustly resolves to the latest stable model supported by the provided API key, avoiding `404 NOT_FOUND` errors seen with hardcoded `1.5` or `2.5` versions. The UI glowing effects were explicitly rejected by the user to avoid generic "AI tropes", and the rate limit protects the unauthenticated generation endpoint from costly abuse.
+
+**Tradeoffs / Follow-up:** The `slowapi` rate limiter relies on memory and the `client.host` IP. If this application is deployed behind a proxy (like Cloudflare or an ALB), the IP retrieval in `main.py` MUST be updated to read `X-Forwarded-For` headers instead, otherwise all users will share the same rate limit.
+
 ## Current Working Assumptions
 
 - The project is a from-scratch Typeform clone, not a generic form app.

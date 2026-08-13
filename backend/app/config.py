@@ -14,6 +14,7 @@ class Settings(BaseSettings):
         default="http://localhost:3000",
         alias="ALLOWED_ORIGINS",
     )
+    gemini_api_key: str | None = Field(default=None, alias="GEMINI_API_KEY")
 
     @property
     def database_path(self) -> Path:

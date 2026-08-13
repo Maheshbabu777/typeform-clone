@@ -45,7 +45,10 @@ class QuestionCreate(BaseModel):
     def clean_options(cls, value: list[str] | None) -> list[str] | None:
         if value is None:
             return None
-        return [option.strip() for option in value if option.strip()]
+        cleaned = [option.strip() for option in value if option.strip()]
+        if not cleaned:
+            return None
+        return cleaned
 
 
 class QuestionUpdate(BaseModel):
