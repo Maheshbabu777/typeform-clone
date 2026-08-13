@@ -2,6 +2,13 @@
 
 import { cn } from "@/lib/utils";
 import type { Question } from "@/lib/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AnswerInputProps {
   question: Question;
@@ -171,30 +178,33 @@ export function AnswerInput({
 
     case "dropdown":
       return (
-        <select
-          autoFocus={autoFocus}
+        <Select
           value={value}
-          onChange={(event) => {
-            const val = event.target.value;
+          onValueChange={(val) => {
             onChange(val);
             if (val) {
               setTimeout(() => onSubmit(val), 120);
             }
           }}
-          className={cn(
-            inputClassName,
-            "cursor-pointer appearance-none py-3",
-            !value && "text-[color:var(--rx-question)]/40",
-          )}
-          style={{ color: "var(--rx-question)" }}
         >
-          <option value="">Select an option</option>
-          {question.options.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger
+            className={cn(
+              inputClassName,
+              "rounded-none px-0 shadow-none border-b focus:ring-0 focus:ring-offset-0 flex justify-between items-center h-auto cursor-pointer",
+              !value && "text-[color:var(--rx-question)]/40",
+            )}
+            style={{ color: "var(--rx-question)" }}
+          >
+            <SelectValue placeholder="Select an option" />
+          </SelectTrigger>
+          <SelectContent className="font-sans">
+            {question.options.map((option) => (
+              <SelectItem key={option} value={option} className="py-2.5 text-base cursor-pointer">
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       );
 
     case "yes_no":
