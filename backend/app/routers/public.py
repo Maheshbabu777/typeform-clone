@@ -45,15 +45,20 @@ def submit_public_response(slug: str, payload: PublicSubmit) -> dict[str, Any]:
                 connection,
                 """
                 SELECT * FROM response
-                WHERE id = ? AND form_id = ? AND completed_at IS NULL
+                WHERE id = ? AND form_id = ?
                 """,
                 (response_id, form["id"]),
             )
             if response is None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Response cannot be completed.",
+                    detail="Invalid response_id for this form.",
                 )
+            
+            # Idempotency: if already completed, just return success immediately
+            if response["completed_at"] is not None:
+                return {"response_id": response_id, "completed": True}
+                
         else:
             cursor = connection.execute("INSERT INTO response (form_id) VALUES (?)", (form["id"],))
             response_id = cursor.lastrowid

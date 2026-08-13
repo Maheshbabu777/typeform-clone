@@ -104,7 +104,7 @@ Pydantic request models. These validate incoming JSON before route handlers touc
 | Class / Function | Description |
 |---|---|
 | `FormCreate` | Request body for creating a form. Requires a non-empty title. |
-| `FormUpdate` | Request body for partially updating a form's title, description, theme colors, roundness, font-size preset, or thank-you text. |
+| `FormUpdate` | Request body for partially updating a form's title, description, theme colors, roundness, font-size preset, thank-you text, and arbitrary settings JSON. |
 | `QuestionCreate` | Request body for creating a question. Validates type, title, description, required flag, options, and settings. |
 | `QuestionCreate.clean_options()` | Field validator that trims option labels and removes blank options. |
 | `QuestionUpdate` | Request body for partially updating a question's type, title, description, required flag, options, or settings. |
@@ -393,6 +393,12 @@ Client-side logic-jump path evaluation, mirrored from the backend.
 | Component | Description |
 |---|---|
 | `CreateFormModal({ isOpen, onClose })` | A modal to create a new form and immediately redirect to its builder. |
+
+### `frontend/src/components/dashboard/rename-form-modal.tsx`
+
+| Component | Description |
+|---|---|
+| `RenameFormModal({ isOpen, onClose, form, onSuccess })` | A modal to quickly rename a form directly from the dashboard dropdown menus. |
 
 ### `frontend/src/components/dashboard/coming-soon-panel.tsx`
 

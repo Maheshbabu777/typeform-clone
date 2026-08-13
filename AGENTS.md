@@ -159,3 +159,29 @@ Do not record tiny mechanical edits unless they clarify a broader decision.
 **Decision:** Overhauled the generic dashboard into a true Typeform clone matching a provided screenshot. Added a global App Shell header, redesigned the sidebar (Workspaces, Ask AI), and implemented a toggleable List View (`FormListItem`) as the new default over the Grid view.
 
 **Rationale:** The user felt the previous dashboard looked "too basic" and "AI-generated." Implementing Typeform's signature stark contrast (light gray backgrounds, pure white panels, thin 1px borders) makes it look authentic. The "Team", "Contacts", and "Automations" tabs were intentionally deferred as visual placeholders to focus on core functional engineering.
+
+### 2026-08-13 - Backend - SQLite Concurrency tuning
+
+**Decision:** Added `PRAGMA journal_mode=WAL` and `PRAGMA busy_timeout=5000` to the SQLite connection initialization in `database.py`.
+
+**Rationale:** The user raised concerns about concurrent respondents submitting forms at the exact same time. While standard SQLite handles read traffic well, concurrent writes can lock the DB. WAL (Write-Ahead Logging) allows readers and writers to access the database simultaneously without hard-locking, and the busy timeout ensures writers politely queue instead of crashing under load.
+
+**Tradeoffs / Follow-up:** This makes SQLite incredibly robust for production-level traffic without needing to migrate to Postgres.
+
+### 2026-08-13 - Backend - Submit Idempotency
+
+**Decision:** Modified the `POST /public/{slug}/submit` endpoint to return early with a 200 OK (and `completed: True`) if a payload is submitted with a `response_id` that is already marked as completed.
+
+**Rationale:** The user pointed out that `POST` isn't naturally idempotent. If a client's submit request succeeds on the server but times out on the network, the browser will retry the `POST`. Previously, this threw a 400 error. By returning early on already-completed responses, the endpoint is now safely idempotent for retries.
+
+### 2026-08-13 - UI/API - Decouple Welcome Screen Title from Internal Form Name
+
+**Decision:** Updated `WelcomeEditor`, `RespondentFlow`, and the backend `FormUpdate` API schema to store the public Welcome Screen text in the `form.settings` JSON block (`welcome_title`, `welcome_description`) instead of overriding the internal `form.title`.
+
+**Rationale:** The user correctly identified that editing the Welcome Screen text was renaming the actual form in the dashboard. Typeform separates the internal Form Name from the public Welcome Screen. The backend `FormUpdate` schema also had to be updated to accept arbitrary `settings` objects so the JSON fields wouldn't be silently stripped during validation.
+
+### 2026-08-13 - Dashboard UX - View Persistence and Inline Rename
+
+**Decision:** Persisted the Dashboard List/Grid view toggle using `localStorage` instead of ephemeral React state, and added a `RenameFormModal` to the dropdown menus in both views. Modified the List View rows to be completely clickable (overlaying a Next.js Link) while keeping metric stats clickable as independent route links.
+
+**Rationale:** The user wanted the dashboard view preference to survive navigation back and forth to the builder, and needed a fast way to rename forms without entering the builder UI. The fully clickable row matches standard SaaS app conventions.

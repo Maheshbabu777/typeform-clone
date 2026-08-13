@@ -80,6 +80,9 @@ def update_form(form_id: int, payload: FormUpdate) -> dict[str, Any]:
             for key in ["description", "theme_roundness", "theme_font_size", "thank_you_text"]
             if key in updates
         }
+        
+        if "settings" in updates and isinstance(updates["settings"], dict):
+            settings_updates.update(updates.pop("settings"))
 
         assignments: list[str] = []
         values: list[Any] = []

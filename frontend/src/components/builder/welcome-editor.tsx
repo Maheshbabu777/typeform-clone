@@ -9,28 +9,37 @@ interface WelcomeEditorProps {
 }
 
 export function WelcomeEditor({ form, onChange }: WelcomeEditorProps) {
-  const [title, setTitle] = useState(form.title);
-  const [description, setDescription] = useState(form.description || "");
+  const defaultTitle = (form.settings?.welcome_title as string) || form.title;
+  const defaultDesc = (form.settings?.welcome_description as string) || form.description || "";
+  
+  const [title, setTitle] = useState(defaultTitle);
+  const [description, setDescription] = useState(defaultDesc);
 
   useEffect(() => {
-    setTitle(form.title);
-    setDescription(form.description || "");
-  }, [form.id]);
+    setTitle((form.settings?.welcome_title as string) || form.title);
+    setDescription((form.settings?.welcome_description as string) || form.description || "");
+  }, [form.id, form.title, form.description, form.settings]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      const proposedTitle = title || "Untitled Form";
+      const proposedTitle = title || "Welcome";
       const proposedDesc = description || undefined;
       
-      if (proposedTitle !== form.title || proposedDesc !== (form.description || undefined)) {
+      const currentTitle = (form.settings?.welcome_title as string) || form.title;
+      const currentDesc = (form.settings?.welcome_description as string) || form.description || undefined;
+      
+      if (proposedTitle !== currentTitle || proposedDesc !== currentDesc) {
         onChange({ 
-          title: proposedTitle, 
-          description: proposedDesc 
+          settings: {
+            ...form.settings,
+            welcome_title: proposedTitle,
+            welcome_description: proposedDesc
+          }
         });
       }
     }, 500);
     return () => clearTimeout(handler);
-  }, [title, description, form.title, form.description, onChange]);
+  }, [title, description, form.title, form.description, form.settings, onChange]);
 
   return (
     <div className="flex h-full flex-col">
