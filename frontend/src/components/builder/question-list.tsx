@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Question } from "@/lib/types";
+import { Question, QuestionType } from "@/lib/types";
+import { AddContentModal } from "./add-content-modal";
 import {
   DndContext,
   closestCenter,
@@ -34,15 +35,23 @@ import {
   Star,
   CreditCard,
   Upload,
+  FileText,
+  Flag,
+  Phone,
+  Globe,
+  Calendar,
+  MessageSquare,
 } from "lucide-react";
 
 interface QuestionListProps {
   questions: Question[];
-  activeQuestionId: number | null;
-  onSelect: (id: number) => void;
-  onAdd: (type: string) => void;
+  formSettings: any;
+  activeQuestionId: number | "welcome" | "thank_you" | null;
+  onSelect: (id: number | "welcome" | "thank_you") => void;
+  onAdd: (type: QuestionType | "welcome" | "thank_you") => void;
   onDelete: (id: number) => void;
   onReorder: (orderedIds: number[]) => void;
+  onUpdateSettings: (settings: any) => void;
 }
 
 const QUESTION_TYPE_ICONS: Record<string, React.ReactNode> = {
@@ -54,20 +63,11 @@ const QUESTION_TYPE_ICONS: Record<string, React.ReactNode> = {
   number: <Hash className="h-4 w-4" />,
   yes_no: <ToggleLeft className="h-4 w-4" />,
   rating: <Star className="h-4 w-4" />,
+  phone_number: <Phone className="h-4 w-4" />,
+  website: <Globe className="h-4 w-4" />,
+  date: <Calendar className="h-4 w-4" />,
+  statement: <MessageSquare className="h-4 w-4" />,
 };
-
-const ADD_MENU_ITEMS = [
-  { type: "short_text", label: "Short Text", icon: QUESTION_TYPE_ICONS.short_text },
-  { type: "long_text", label: "Long Text", icon: QUESTION_TYPE_ICONS.long_text },
-  { type: "multiple_choice", label: "Multiple Choice", icon: QUESTION_TYPE_ICONS.multiple_choice },
-  { type: "dropdown", label: "Dropdown", icon: QUESTION_TYPE_ICONS.dropdown },
-  { type: "email", label: "Email", icon: QUESTION_TYPE_ICONS.email },
-  { type: "number", label: "Number", icon: QUESTION_TYPE_ICONS.number },
-  { type: "yes_no", label: "Yes/No", icon: QUESTION_TYPE_ICONS.yes_no },
-  { type: "rating", label: "Rating", icon: QUESTION_TYPE_ICONS.rating },
-  { type: "payment", label: "Payment", icon: <CreditCard className="h-4 w-4" />, disabled: true, badge: "Coming Soon" },
-  { type: "file_upload", label: "File Upload", icon: <Upload className="h-4 w-4" />, disabled: true, badge: "Coming Soon" },
-];
 
 function SortableQuestionItem({
   question,
@@ -139,13 +139,15 @@ function SortableQuestionItem({
 
 export function QuestionList({
   questions,
+  formSettings,
   activeQuestionId,
   onSelect,
   onAdd,
   onDelete,
   onReorder,
+  onUpdateSettings,
 }: QuestionListProps) {
-  const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -169,47 +171,44 @@ export function QuestionList({
       <div className="p-4 flex items-center justify-between border-b border-[#dedcde]">
         <h2 className="text-sm font-semibold text-[#3c323e]">Content</h2>
         
-        <div className="relative">
-          <button
-            onClick={() => setIsAddMenuOpen(!isAddMenuOpen)}
-            className="flex items-center gap-1 rounded bg-[#a25fba] px-2 py-1 text-xs font-medium text-white hover:bg-[#9454ab] transition-all duration-300 ease-in-out"
-          >
-            <Plus className="h-4 w-4" /> Add
-          </button>
-          
-          {isAddMenuOpen && (
-            <div className="absolute right-0 top-full mt-1 z-50 w-56 rounded-md border border-[#dedcde] bg-white py-1 shadow-lg animate-in fade-in zoom-in-95 duration-200">
-              {ADD_MENU_ITEMS.map((item) => (
-                <button
-                  key={item.type}
-                  disabled={item.disabled}
-                  onClick={() => {
-                    onAdd(item.type);
-                    setIsAddMenuOpen(false);
-                  }}
-                  className={`flex w-full items-center justify-between px-4 py-2 text-sm transition-colors duration-200 ${
-                    item.disabled
-                      ? "cursor-not-allowed text-gray-400"
-                      : "text-[#3c323e] hover:bg-gray-100"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <span className="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-medium text-blue-700">
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        <button
+          onClick={() => setIsAddModalOpen(true)}
+          className="flex items-center gap-1 rounded bg-[#a25fba] px-2 py-1 text-xs font-medium text-white hover:bg-[#9454ab] transition-all duration-300 ease-in-out"
+        >
+          <Plus className="h-4 w-4" /> Add
+        </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto p-2 flex flex-col">
+        {/* Welcome Screen Static Block */}
+        {!formSettings?.skip_welcome_screen && (
+          <button
+            onClick={() => onSelect("welcome")}
+            className={`group mb-4 relative flex items-center gap-3 rounded-lg p-2 text-left transition-colors ${
+              activeQuestionId === "welcome" ? "bg-gray-100" : "hover:bg-gray-50"
+            }`}
+          >
+            <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-gray-200 text-xs font-medium text-gray-600">
+              <FileText className="h-4 w-4" />
+            </div>
+            <span className="text-sm font-medium text-[#3c323e] flex-1">Welcome Screen</span>
+            
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                onUpdateSettings({ ...formSettings, skip_welcome_screen: true });
+                if (activeQuestionId === "welcome") {
+                  onSelect(questions.length > 0 ? questions[0].id : "thank_you");
+                }
+              }}
+              className="flex-shrink-0 rounded p-1 text-gray-400 opacity-0 hover:bg-red-50 hover:text-red-600 group-hover:opacity-100 transition-all duration-200"
+              title="Delete Welcome Screen"
+            >
+              <Trash2 className="h-4 w-4" />
+            </div>
+          </button>
+        )}
+
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={questions.map((q) => q.id)} strategy={verticalListSortingStrategy}>
             <div className="flex flex-col gap-1">
@@ -233,13 +232,20 @@ export function QuestionList({
         </DndContext>
       </div>
       
-      {/* Click outside listener for the menu could be added here, but leaving simple for now */}
-      {isAddMenuOpen && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setIsAddMenuOpen(false)}
-        />
-      )}
+      <AddContentModal 
+        isOpen={isAddModalOpen} 
+        onClose={() => setIsAddModalOpen(false)} 
+        onAdd={(type) => {
+          if (type === "welcome") {
+            onUpdateSettings({ ...formSettings, skip_welcome_screen: false });
+            onSelect("welcome");
+          } else if (type === "thank_you") {
+            onSelect("thank_you");
+          } else {
+            onAdd(type);
+          }
+        }} 
+      />
     </div>
   );
 }

@@ -246,6 +246,50 @@ export function AnswerInput({
       );
     }
 
+    case "phone_number":
+      return (
+        <input
+          autoFocus={autoFocus}
+          type="tel"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          onKeyDown={handleKeyDown}
+          className={inputClassName}
+          style={{ color: "var(--rx-question)" }}
+          placeholder="+1 (555) 000-0000"
+        />
+      );
+
+    case "website":
+      return (
+        <input
+          autoFocus={autoFocus}
+          type="url"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          onKeyDown={handleKeyDown}
+          className={inputClassName}
+          style={{ color: "var(--rx-question)" }}
+          placeholder="https://example.com"
+        />
+      );
+
+    case "date":
+      return (
+        <input
+          autoFocus={autoFocus}
+          type="date"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          onKeyDown={handleKeyDown}
+          className={inputClassName}
+          style={{ color: "var(--rx-question)" }}
+        />
+      );
+
+    case "statement":
+      return null;
+
     default:
       return null;
   }

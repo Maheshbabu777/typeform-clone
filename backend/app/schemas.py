@@ -11,6 +11,10 @@ QuestionType = Literal[
     "number",
     "yes_no",
     "rating",
+    "phone_number",
+    "website",
+    "date",
+    "statement",
 ]
 
 

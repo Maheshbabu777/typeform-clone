@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS question (
     form_id         INTEGER NOT NULL REFERENCES form(id) ON DELETE CASCADE,
     type            TEXT NOT NULL CHECK (type IN
                         ('short_text', 'long_text', 'multiple_choice', 'dropdown',
-                         'email', 'number', 'yes_no', 'rating')),
+                         'email', 'number', 'yes_no', 'rating', 'phone_number', 'website', 'date', 'statement')),
     title           TEXT NOT NULL,
     description     TEXT,
     required        INTEGER NOT NULL DEFAULT 0 CHECK (required IN (0, 1)),

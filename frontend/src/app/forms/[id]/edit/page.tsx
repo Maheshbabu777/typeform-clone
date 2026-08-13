@@ -8,7 +8,10 @@ import { ThemeProvider } from "@/components/respondent/theme-provider";
 import { QuestionRenderer } from "@/components/respondent/question-renderer";
 import { QuestionList } from "@/components/builder/question-list";
 import { QuestionEditor } from "@/components/builder/question-editor";
+import { WelcomeEditor } from "@/components/builder/welcome-editor";
+import { ThankYouEditor } from "@/components/builder/thank-you-editor";
 import { ThemeSettings } from "@/components/builder/theme-settings";
+import { Link as LinkIcon, Check } from "lucide-react";
 
 export default function BuilderPage() {
   const params = useParams();
@@ -16,8 +19,9 @@ export default function BuilderPage() {
   const formId = parseInt(params.id as string, 10);
 
   const [form, setForm] = useState<PublicForm | null>(null);
-  const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
+  const [activeQuestionId, setActiveQuestionId] = useState<number | "welcome" | "thank_you" | null>("welcome");
   const [isPublishing, setIsPublishing] = useState(false);
+  const [hasCopied, setHasCopied] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
 
   useEffect(() => {
@@ -32,8 +36,8 @@ export default function BuilderPage() {
     try {
       const data = await getForm(formId);
       setForm(data);
-      if (data.questions.length > 0 && activeQuestionId === null) {
-        setActiveQuestionId(data.questions[0].id);
+      if (activeQuestionId === null) {
+        setActiveQuestionId("welcome");
       }
     } catch (error) {
       console.error("Failed to load form:", error);
@@ -78,10 +82,11 @@ export default function BuilderPage() {
 
   const handleCreateQuestion = async (type: any) => {
     try {
+      const isChoice = ["multiple_choice", "dropdown"].includes(type);
       const newQ = await createQuestion(form.id, {
         type,
         title: "New Question",
-        options: ["Option 1", "Option 2"],
+        ...(isChoice ? { options: ["Option 1", "Option 2"] } : {}),
       });
       setForm({
         ...form,
@@ -168,27 +173,38 @@ export default function BuilderPage() {
             Theme
           </button>
           
-          <button
-            onClick={handlePublishToggle}
-            disabled={isPublishing}
-            className={`rounded-md px-4 py-1.5 text-sm font-medium text-white transition-all duration-300 ease-in-out ${
-              isPublished 
-                ? "bg-gray-500 hover:bg-gray-600" 
-                : "bg-[#a25fba] hover:bg-[#9454ab]"
-            } disabled:opacity-50`}
-          >
-            {isPublished ? "Unpublish" : "Publish"}
-          </button>
-          
-          {isPublished && form.public_slug && (
-            <a
-              href={`/f/${form.public_slug}`}
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm font-medium text-[#a25fba] hover:underline transition-all duration-300 ease-in-out"
+          {!isPublished ? (
+            <button
+              onClick={handlePublishToggle}
+              disabled={isPublishing}
+              className="rounded-md px-4 py-1.5 text-sm font-medium text-white transition-all duration-300 ease-in-out bg-[#a25fba] hover:bg-[#9454ab] disabled:opacity-50"
             >
-              View Live
-            </a>
+              Publish
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(`${window.location.origin}/f/${form.public_slug}`);
+                  setHasCopied(true);
+                  setTimeout(() => setHasCopied(false), 2000);
+                }}
+                className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 transition-colors"
+                title="Copy link"
+              >
+                {hasCopied ? <Check className="h-4 w-4 text-green-500" /> : <LinkIcon className="h-4 w-4" />}
+              </button>
+              <button
+                onClick={() => {
+                   setIsPublishing(true);
+                   setTimeout(() => setIsPublishing(false), 800);
+                }}
+                disabled={isPublishing}
+                className="rounded-md px-4 py-1.5 text-sm font-medium text-white transition-all duration-300 ease-in-out bg-gray-900 hover:bg-gray-800 disabled:opacity-50"
+              >
+                {isPublishing ? "Publishing..." : "Publish edits"}
+              </button>
+            </div>
           )}
         </div>
       </header>
@@ -199,17 +215,32 @@ export default function BuilderPage() {
         <div className="w-[280px] flex-shrink-0 border-r border-[#dedcde] bg-white overflow-y-auto">
           <QuestionList 
             questions={form.questions}
+            formSettings={form.settings}
             activeQuestionId={activeQuestionId}
             onSelect={setActiveQuestionId}
             onAdd={handleCreateQuestion}
             onDelete={handleDeleteQuestion}
             onReorder={handleReorder}
+            onUpdateSettings={(settings) => {
+              setForm({ ...form, settings });
+              updateForm(form.id, { settings });
+            }}
           />
         </div>
 
         {/* Center Pane (Editor) */}
         <div className="flex w-[350px] flex-shrink-0 flex-col border-r border-[#dedcde] bg-white shadow-sm z-10 overflow-y-auto">
-          {activeQuestion ? (
+          {activeQuestionId === "welcome" ? (
+            <WelcomeEditor form={form} onChange={(updates) => {
+              setForm({ ...form, ...updates });
+              updateForm(form.id, updates);
+            }} />
+          ) : activeQuestionId === "thank_you" ? (
+            <ThankYouEditor form={form} onChange={(updates) => {
+              setForm({ ...form, ...updates });
+              updateForm(form.id, updates);
+            }} />
+          ) : activeQuestion ? (
             <QuestionEditor 
               question={activeQuestion}
               onChange={(updates) => handleUpdateQuestion(activeQuestion.id, updates)}
@@ -226,18 +257,8 @@ export default function BuilderPage() {
           <div className="w-full max-w-4xl h-full bg-white shadow-xl rounded-2xl overflow-hidden relative flex flex-col rx-theme">
             <ThemeProvider form={form}>
               <div className="flex-1 overflow-y-auto p-4 md:p-8 relative">
-                {activeQuestion ? (
-                  <QuestionRenderer
-                    question={activeQuestion}
-                    questionNumber={form.questions.findIndex((q) => q.id === activeQuestion.id) + 1}
-                    value={""}
-                    error={null}
-                    onChange={() => {}}
-                    onSubmit={() => {}}
-                    showOkButton={true}
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center flex-col gap-4">
+                {activeQuestionId === "welcome" ? (
+                  <div className="flex h-full items-center justify-center flex-col gap-4 text-center">
                     <h1 
                       className="text-[length:var(--rx-font-question-title)] font-normal"
                       style={{ color: "var(--rx-question)" }}
@@ -259,10 +280,29 @@ export default function BuilderPage() {
                         color: "var(--rx-button-content)",
                       }}
                     >
-                      Start Preview
+                      Start
                     </button>
                   </div>
-                )}
+                ) : activeQuestionId === "thank_you" ? (
+                  <div className="flex h-full items-center justify-center flex-col gap-4 text-center">
+                    <h1 
+                      className="text-[length:var(--rx-font-question-title)] font-normal"
+                      style={{ color: "var(--rx-question)" }}
+                    >
+                      {form.thank_you_text || "Thanks for completing this form"}
+                    </h1>
+                  </div>
+                ) : activeQuestion ? (
+                  <QuestionRenderer
+                    question={activeQuestion}
+                    questionNumber={form.questions.findIndex((q) => q.id === activeQuestion.id) + 1}
+                    value={""}
+                    error={null}
+                    onChange={() => {}}
+                    onSubmit={() => {}}
+                    showOkButton={true}
+                  />
+                ) : null}
               </div>
             </ThemeProvider>
           </div>
