@@ -2,6 +2,7 @@
 
 import { AnswerInput } from "@/components/respondent/answer-input";
 import type { Question } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface QuestionRendererProps {
   question: Question;
@@ -34,19 +35,21 @@ export function QuestionRenderer({
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <p
-          className="text-[length:var(--rx-font-helper)]"
-          style={{ color: "var(--rx-question)", opacity: 0.7 }}
-        >
-          {questionNumber} →
-        </p>
-        <h2
-          className="font-normal leading-tight text-[length:var(--rx-font-question-title-mobile)] lg:text-[length:var(--rx-font-question-title)]"
-          style={{ color: "var(--rx-question)" }}
-        >
-          {question.title}
-          {question.required ? <span aria-hidden="true"> *</span> : null}
-        </h2>
+        <div className="flex items-baseline gap-3">
+          <span
+            className="text-[length:var(--rx-font-helper)] font-medium"
+            style={{ color: "var(--rx-question)", opacity: 0.7 }}
+          >
+            {questionNumber}.
+          </span>
+          <h2
+            className="font-normal leading-tight text-[length:var(--rx-font-question-title-mobile)] lg:text-[length:var(--rx-font-question-title)]"
+            style={{ color: "var(--rx-question)" }}
+          >
+            {question.title}
+            {question.required ? <span aria-hidden="true"> *</span> : null}
+          </h2>
+        </div>
         {question.description ? (
           <p
             className="leading-relaxed text-[length:var(--rx-font-description-mobile)] lg:text-[length:var(--rx-font-description)]"

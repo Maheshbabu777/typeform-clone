@@ -11,7 +11,7 @@ import { QuestionEditor } from "@/components/builder/question-editor";
 import { WelcomeEditor } from "@/components/builder/welcome-editor";
 import { ThankYouEditor } from "@/components/builder/thank-you-editor";
 import { ThemeSettings } from "@/components/builder/theme-settings";
-import { Link as LinkIcon, Check } from "lucide-react";
+import { Link as LinkIcon, Check, ArrowLeft } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export default function BuilderPage() {
@@ -152,7 +152,7 @@ export default function BuilderPage() {
             onClick={() => router.push("/")}
             className="text-sm font-medium text-muted-foreground transition-all duration-300 ease-in-out hover:text-primary flex items-center flex-shrink-0"
           >
-            ← <span className="hidden sm:inline ml-1">Dashboard</span>
+            <ArrowLeft className="h-4 w-4 mr-1 hidden sm:inline" /><span className="hidden sm:inline ml-1">Dashboard</span>
           </button>
           <div className="h-4 w-[1px] bg-border flex-shrink-0" />
           <input
