@@ -97,6 +97,13 @@ export async function unpublishForm(id: number): Promise<void> {
   return request<void>(`/forms/${id}/unpublish`, { method: "POST" });
 }
 
+export async function generateFormWithAI(prompt: string): Promise<{ form_id: number }> {
+  return request<{ form_id: number }>("/api/v1/ai/generate", {
+    method: "POST",
+    body: JSON.stringify({ prompt }),
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Questions
 // ---------------------------------------------------------------------------

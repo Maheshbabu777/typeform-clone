@@ -6,14 +6,15 @@ import {
   Search, 
   ChevronDown, 
   List, 
-  Grid as GridIcon, 
-  MoreHorizontal, 
-  UserPlus, 
+  Grid as GridIcon,
+  MoreHorizontal,
+  UserPlus,
   Settings,
   HelpCircle,
   Menu,
   X,
-  Folder
+  Folder,
+  Wand2
 } from "lucide-react";
 import { toast } from "sonner";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -23,6 +24,7 @@ import { FormSearchTrie } from "@/lib/trie";
 import { FormCard } from "@/components/dashboard/form-card";
 import { FormListItem } from "@/components/dashboard/form-list-item";
 import { CreateFormModal } from "@/components/dashboard/create-form-modal";
+import { AIGenerateModal } from "@/components/dashboard/ai-generate-modal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,6 +53,7 @@ export default function DashboardPage() {
   };
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isAIGenerateModalOpen, setIsAIGenerateModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>("date_desc");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -179,6 +182,17 @@ export default function DashboardPage() {
                 Create form
               </button>
 
+              <button
+                onClick={() => {
+                  setIsAIGenerateModalOpen(true);
+                  setIsSidebarOpen(false);
+                }}
+                className="flex w-full items-center justify-center gap-2 rounded-md border border-border bg-transparent px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+              >
+                <Wand2 className="h-4 w-4 text-muted-foreground" />
+                Draft with AI
+              </button>
+
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
@@ -303,13 +317,22 @@ export default function DashboardPage() {
           ) : forms.length === 0 ? (
             <div className="flex h-64 flex-col items-center justify-center text-center">
               <p className="mb-4 text-muted-foreground">No forms yet</p>
-              <button
-                onClick={() => setIsCreateModalOpen(true)}
-                className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-              >
-                <Plus className="h-4 w-4" />
-                Create form
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  <Plus className="h-4 w-4" />
+                  Create form
+                </button>
+                <button
+                  onClick={() => setIsAIGenerateModalOpen(true)}
+                  className="flex items-center gap-2 rounded-md border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                >
+                  <Wand2 className="h-4 w-4 text-muted-foreground" />
+                  Draft with AI
+                </button>
+              </div>
             </div>
           ) : viewMode === "list" ? (
             <div className="w-full overflow-x-auto no-scrollbar pb-4">
@@ -345,6 +368,11 @@ export default function DashboardPage() {
       <CreateFormModal 
         isOpen={isCreateModalOpen} 
         onClose={() => setIsCreateModalOpen(false)} 
+      />
+
+      <AIGenerateModal 
+        isOpen={isAIGenerateModalOpen}
+        onClose={() => setIsAIGenerateModalOpen(false)}
       />
     </div>
   );
