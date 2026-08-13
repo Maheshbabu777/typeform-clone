@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition, useEffect } from "react";
 
 import { ProgressBar } from "@/components/respondent/progress-bar";
 import { QuestionRenderer } from "@/components/respondent/question-renderer";
@@ -31,7 +31,9 @@ export function RespondentFlow({ form, slug }: RespondentFlowProps) {
     [form.questions],
   );
 
-  const [phase, setPhase] = useState<FlowPhase>("landing");
+  const [phase, setPhase] = useState<FlowPhase>(
+    form.settings?.skip_welcome_screen ? "question" : "landing"
+  );
   const [responseId, setResponseId] = useState<number | null>(null);
   const [currentQuestionId, setCurrentQuestionId] = useState<number | null>(
     sortedQuestions[0]?.id ?? null,
@@ -42,6 +44,17 @@ export function RespondentFlow({ form, slug }: RespondentFlowProps) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [animationKey, setAnimationKey] = useState(0);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (form.settings?.skip_welcome_screen) {
+      // If we skip the welcome screen, we need to create the response row immediately on load
+      startPublicResponse(slug).then((res) => {
+        setResponseId(res.response_id);
+      }).catch(() => {
+        // Submission still works without response_id per API contract.
+      });
+    }
+  }, [form.settings?.skip_welcome_screen, slug]);
 
   const currentQuestion = sortedQuestions.find((question) => question.id === currentQuestionId);
   const currentQuestionNumber =

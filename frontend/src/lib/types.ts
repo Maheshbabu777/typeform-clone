@@ -5,9 +5,11 @@ export type QuestionType =
   | "dropdown"
   | "email"
   | "number"
-  | "yes_no"
-  | "rating";
-
+  | "rating"
+  | "phone_number"
+  | "website"
+  | "date"
+  | "statement";
 export type ThemeRoundness = "none" | "small" | "large";
 export type ThemeFontSize = "small" | "medium" | "large";
 

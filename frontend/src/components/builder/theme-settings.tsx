@@ -102,20 +102,6 @@ export function ThemeSettings({ form, onClose, onUpdate }: ThemeSettingsProps) {
             ))}
           </div>
         </div>
-        
-        {/* Thank You Text */}
-        <div className="space-y-4 pt-4 border-t border-[#dedcde]">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Completion</h3>
-          <div>
-            <label className="text-sm font-medium text-[#3c323e] mb-2 block">Thank You Message</label>
-            <textarea
-              value={form.thank_you_text || "Thanks for completing this form"}
-              onChange={(e) => onUpdate({ thank_you_text: e.target.value })}
-              className="w-full rounded-md border border-[#dedcde] px-3 py-2 text-sm focus:border-[#a25fba] focus:outline-none focus:ring-1 focus:ring-[#a25fba]"
-              rows={3}
-            />
-          </div>
-        </div>
 
       </div>
     </div>

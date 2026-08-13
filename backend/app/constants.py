@@ -9,6 +9,10 @@ QUESTION_TYPES = {
     "number",
     "yes_no",
     "rating",
+    "phone_number",
+    "website",
+    "date",
+    "statement",
 }
 
 DEFAULT_THEME_COLORS = {
