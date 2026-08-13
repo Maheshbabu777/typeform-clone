@@ -19,7 +19,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       "Content-Type": "application/json",
       ...init?.headers,
     },
-    cache: "no-store",
+    // Use ISR caching for GET requests (cache for 60 seconds). POST requests bypass this automatically.
+    next: { revalidate: 60 },
   });
 
   if (!response.ok) {

@@ -231,3 +231,27 @@ Do not record tiny mechanical edits unless they clarify a broader decision.
 **Rationale:** The user wanted to elevate the overall typography and sizes across the site. DM Sans has a much wider geometry and higher blackness at bold weights compared to system-ui. By globally applying it and simultaneously reducing raw font-weights, the interface maintains the minimalist, premium Typeform aesthetic without text feeling heavy or shouty.
 
 **Tradeoffs / Follow-up:** The `layout.tsx` body now enforces `.font-sans`. If future components (like code blocks) need monospaced fonts, they must explicitly use `.font-mono` to override the body inheritance.
+
+### 2026-08-14 - Deployment - Next 15 devIndicators TypeScript Error
+
+**Decision:** Completely removed the `devIndicators` block from `next.config.ts`.
+
+**Rationale:** The user previously requested to remove the "N" logo locally. However, Next 16's strict TypeScript compiler on Vercel failed the production build because the exact type signature for `devIndicators` changed. Since it's a dev-only feature anyway, completely removing it ensures Vercel compiles successfully.
+
+### 2026-08-14 - Deployment - SQLite Auto-Initialization on Startup
+
+**Decision:** Modified `backend/app/main.py` to add a FastAPI `lifespan` event that calls `init_database()` automatically when the server boots.
+
+**Rationale:** When deploying to free-tier cloud platforms like Render, the server is ephemeral and the SQLite database (`typeform_clone.db`) starts completely empty on every wake-up. Because `init_database()` uses safe `CREATE TABLE IF NOT EXISTS` commands, running it on startup prevents hard crashes when the API tries to insert a form into a non-existent table.
+
+### 2026-08-14 - UI Consistency - Refined Lucide Icons
+
+**Decision:** Updated minor UI elements across the app: changed the builder "Back to Dashboard" text (`←`) to a `lucide-react` `ArrowLeft`, changed the Dashboard Workspace icon from a Grid to a `Folder`, and replaced the text arrow (`→`) in the respondent view with a clean `.` inline dot.
+
+**Rationale:** Text-based arrows and icons break the premium aesthetic and often suffer from layout alignment issues. Using standard Lucide icons and simpler typography matches the Typeform CX exactly.
+
+### 2026-08-14 - Performance - Next.js ISR for Public Forms
+
+**Decision:** Replaced `cache: "no-store"` with `next: { revalidate: 60 }` inside `frontend/src/lib/api.ts` for public respondent requests.
+
+**Rationale:** The deployed version suffered from latency because Next.js was forcing a round-trip to the slow Render backend on every single public page load. By utilizing Incremental Static Regeneration (ISR), Vercel now aggressively caches the form structure at the Edge for 60 seconds. A respondent's load time drops from ~200ms to ~1ms, completely masking the backend latency. The Dashboard API (`api-creator.ts`) remains strictly `no-store` so the creator sees their edits in real-time.

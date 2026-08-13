@@ -28,6 +28,7 @@ FastAPI application entry point. It creates the app, configures CORS, defines he
 
 | Function | Description |
 |---|---|
+| `lifespan(app)` | FastAPI async context manager that runs `init_database()` when the server boots. This ensures the SQLite schema is recreated if a serverless platform (like Render) wipes the ephemeral disk. |
 | `health_check()` | Handles `GET /health`. Returns `{"status": "ok"}` so local tooling, deployment platforms, or humans can quickly confirm that the API process is alive. |
 
 ### `backend/app/config.py`

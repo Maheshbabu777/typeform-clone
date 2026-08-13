@@ -1,6 +1,6 @@
 # Typeform Clone Architecture & Documentation
 
-🟢 **Live Demo:** [https://typeform-clone-ebon.vercel.app](https://typeform-clone-ebon.vercel.app)
+**Live Demo:** [https://typeform-clone-ebon.vercel.app](https://typeform-clone-ebon.vercel.app)
 
 A production-ready, full-stack clone of the Typeform form builder and respondent experience. This project faithfully recreates Typeform's signature one-question-at-a-time conversational interface, paired with a robust creator dashboard for form construction, theming, and logic branching.
 
@@ -117,7 +117,7 @@ typeform-clone/
 
 ---
 
-### ⚠️ Deployment Note regarding SQLite
+### Deployment Note regarding SQLite
 This application is deployed using a free-tier Render web service for the FastAPI backend. Because free instances use ephemeral filesystems, the SQLite database (`typeform_clone.db`) will be reset whenever Render performs a system restart. An Uptime Robot monitor is attached to prevent the 15-minute idle sleep, but data may still reset periodically. For true production persistence, a Persistent Disk must be attached to the Render instance or migrated to PostgreSQL.
 
 ---
