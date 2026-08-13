@@ -100,16 +100,18 @@ export function RespondentFlow({ form, slug }: RespondentFlowProps) {
     [responseId, slug],
   );
 
-  const advance = useCallback(() => {
+  const advance = useCallback((overrideValue?: string | React.MouseEvent | React.FormEvent) => {
     if (!currentQuestion) return;
 
-    const validationError = validateAnswer(currentQuestion, draftValue);
+    const actualValue = typeof overrideValue === "string" ? overrideValue : draftValue;
+
+    const validationError = validateAnswer(currentQuestion, actualValue);
     if (validationError) {
       setError(validationError);
       return;
     }
 
-    const trimmed = draftValue.trim();
+    const trimmed = actualValue.trim();
     const nextAnswers = { ...answers };
     if (trimmed) {
       nextAnswers[currentQuestion.id] = trimmed;
@@ -149,11 +151,11 @@ export function RespondentFlow({ form, slug }: RespondentFlowProps) {
         <div
           key={animationKey}
           className={cn(
-            "w-full animate-in fade-in slide-in-from-bottom-3 duration-[250ms] fill-mode-both ease-out",
+            "w-full animate-in fade-in slide-in-from-bottom-8 duration-500 fill-mode-both ease-out",
           )}
         >
           {phase === "landing" ? (
-            <section className="mx-auto flex w-full max-w-2xl flex-col gap-8">
+            <section className="mx-auto flex w-full max-w-2xl flex-col items-center text-center gap-8">
               <div className="flex flex-col gap-4">
                 <h1
                   className="text-[length:var(--rx-font-question-title-mobile)] font-normal leading-tight lg:text-[length:var(--rx-font-question-title)]"
@@ -209,7 +211,7 @@ export function RespondentFlow({ form, slug }: RespondentFlowProps) {
           ) : null}
 
           {phase === "thank_you" ? (
-            <section className="mx-auto flex w-full max-w-2xl flex-col gap-4">
+            <section className="mx-auto flex w-full max-w-2xl flex-col items-center text-center gap-4">
               <h1
                 className="text-[length:var(--rx-font-question-title-mobile)] font-normal leading-tight lg:text-[length:var(--rx-font-question-title)]"
                 style={{ color: "var(--rx-question)" }}

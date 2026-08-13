@@ -66,10 +66,7 @@
     box-sizing: border-box;
   }
 
-  .rx-theme button:focus-visible,
-  .rx-theme input:focus-visible,
-  .rx-theme textarea:focus-visible,
-  .rx-theme select:focus-visible {
+  .rx-theme button:focus-visible {
     outline: 2px solid var(--rx-answer);
     outline-offset: 2px;
   }

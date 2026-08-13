@@ -231,6 +231,12 @@ The frontend has a working respondent flow at `/f/[slug]`. Dashboard, builder, a
 |---|---|
 | `DashboardPage()` | Current placeholder dashboard route for `/`. Establishes the app-shell look and confirms the frontend scaffold is rendering. |
 
+### `frontend/src/app/forms/[id]/edit/page.tsx`
+
+| Component | Description |
+|---|---|
+| `BuilderPage()` | Main client orchestrator for the Creator Form Builder. Fetches the form, manages local state, and renders the three-pane layout (Question List, Editor, and Live Preview). |
+
 ### `frontend/src/app/f/[slug]/page.tsx`
 
 | Component | Description |
@@ -281,6 +287,15 @@ HTTP helpers for the public respondent endpoints.
 | `getPublicForm(slug)` | Calls `GET /public/{slug}` and returns the published form payload. |
 | `startPublicResponse(slug)` | Calls `POST /public/{slug}/start` and returns `{response_id}`. |
 | `submitPublicResponse(slug, payload)` | Calls `POST /public/{slug}/submit` and returns completion metadata. |
+
+### `frontend/src/lib/api-creator.ts`
+
+| Function | Description |
+|---|---|
+| `createForm`, `getForm`, `updateForm`, `deleteForm` | Wrappers for standard Form CRUD operations. |
+| `duplicateForm`, `publishForm`, `unpublishForm` | Wrappers for Form life-cycle actions. |
+| `createQuestion`, `updateQuestion`, `deleteQuestion`, `reorderQuestions` | Wrappers for Question CRUD and reordering. |
+| `createLogicRule`, `deleteLogicRule` | Wrappers for Logic Jump CRUD. |
 
 ### `frontend/src/lib/theme.ts`
 
@@ -340,6 +355,24 @@ Client-side logic-jump path evaluation, mirrored from the backend.
 | Component | Description |
 |---|---|
 | `RespondentFlow({ form, slug })` | Main client orchestrator for landing → one-question-at-a-time flow → thank-you. Calls `/start` on begin, tracks answers locally, evaluates logic jumps client-side for navigation/progress, and submits on completion. |
+
+### `frontend/src/components/builder/question-list.tsx`
+
+| Component | Description |
+|---|---|
+| `QuestionList({ questions, ... })` | Renders the Left Rail using `@dnd-kit` for sortable drag-and-drop question reordering, and a Plus menu to add new questions. |
+
+### `frontend/src/components/builder/question-editor.tsx`
+
+| Component | Description |
+|---|---|
+| `QuestionEditor({ question, onChange })` | Renders the Center Pane. Exposes inputs for title, description, and required toggle. Conditionally renders option editors for choice types and max-scale for ratings. Uses a 500ms debounce to trigger `onChange`. |
+
+### `frontend/src/components/builder/theme-settings.tsx`
+
+| Component | Description |
+|---|---|
+| `ThemeSettings({ form, onClose, onUpdate })` | Renders a modal/side-panel to edit the 5 theme colors, roundness, font size, and thank-you text. |
 
 ## Frontend Configuration Files
 

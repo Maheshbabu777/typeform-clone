@@ -70,3 +70,36 @@ export interface PublicSubmitPayload {
   response_id?: number;
   answers: PublicAnswerPayload[];
 }
+
+export interface FormUpdatePayload {
+  title?: string;
+  description?: string;
+  theme_colors?: Partial<ThemeColors>;
+  theme_roundness?: ThemeRoundness;
+  theme_font_size?: ThemeFontSize;
+  thank_you_text?: string;
+}
+
+export interface QuestionCreatePayload {
+  type: QuestionType;
+  title: string;
+  description?: string;
+  required?: boolean;
+  options?: string[];
+  settings?: Record<string, unknown>;
+}
+
+export interface QuestionUpdatePayload {
+  type?: QuestionType;
+  title?: string;
+  description?: string;
+  required?: boolean;
+  options?: string[];
+  settings?: Record<string, unknown>;
+}
+
+export interface LogicRuleCreatePayload {
+  question_id: number;
+  condition_value: string;
+  target_question_id: number | null;
+}
