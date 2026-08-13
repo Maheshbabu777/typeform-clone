@@ -35,7 +35,7 @@ export function CreateFormModal({ isOpen, onClose }: CreateFormModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="w-full max-w-md animate-in rounded-xl border border-border bg-card p-6 text-card-foreground shadow-xl fade-in zoom-in duration-200">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-card-foreground">Create new form</h2>
+          <h2 className="text-xl font-medium text-card-foreground">Create new form</h2>
           <button 
             onClick={onClose}
             className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"

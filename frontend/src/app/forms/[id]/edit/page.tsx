@@ -144,31 +144,33 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="flex h-screen w-full flex-col bg-background text-foreground">
+    <div className="flex h-screen w-full flex-col bg-background text-foreground overflow-x-hidden">
       {/* Top Bar */}
-      <header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 text-card-foreground shadow-sm">
-        <div className="flex items-center gap-4">
+      <header className="flex h-14 items-center justify-between border-b border-border bg-card px-2 sm:px-4 text-card-foreground shadow-sm">
+        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0 pr-2">
           <button 
             onClick={() => router.push("/")}
-            className="text-sm font-medium text-muted-foreground transition-all duration-300 ease-in-out hover:text-primary"
+            className="text-sm font-medium text-muted-foreground transition-all duration-300 ease-in-out hover:text-primary flex items-center flex-shrink-0"
           >
-            ← Dashboard
+            ← <span className="hidden sm:inline ml-1">Dashboard</span>
           </button>
-          <div className="h-4 w-[1px] bg-border" />
+          <div className="h-4 w-[1px] bg-border flex-shrink-0" />
           <input
             type="text"
             value={form.title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            className="border-none bg-transparent text-lg font-medium text-foreground transition-colors duration-300 focus:outline-none focus:ring-0"
+            className="border-none bg-transparent text-base sm:text-lg font-medium text-foreground transition-colors duration-300 focus:outline-none focus:ring-0 w-full min-w-[50px]"
             placeholder="Form Title"
           />
         </div>
         
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
+        <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
+          <div className="hidden sm:block">
+            <ThemeToggle />
+          </div>
           <button
             onClick={() => setIsThemeOpen(true)}
-            className="rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-300 ease-in-out hover:bg-muted"
+            className="rounded-md px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium transition-all duration-300 ease-in-out hover:bg-muted"
           >
             Theme
           </button>
@@ -177,19 +179,19 @@ export default function BuilderPage() {
             <button
               onClick={handlePublishToggle}
               disabled={isPublishing}
-              className="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-all duration-300 ease-in-out hover:bg-primary/90 disabled:opacity-50"
+              className="rounded-md bg-primary px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium text-primary-foreground transition-all duration-300 ease-in-out hover:bg-primary/90 disabled:opacity-50"
             >
               Publish
             </button>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(`${window.location.origin}/f/${form.public_slug}`);
                   setHasCopied(true);
                   setTimeout(() => setHasCopied(false), 2000);
                 }}
-                className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="rounded-md p-1 sm:p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 title="Copy link"
               >
                 {hasCopied ? <Check className="h-4 w-4 text-green-500" /> : <LinkIcon className="h-4 w-4" />}
@@ -200,7 +202,7 @@ export default function BuilderPage() {
                    setTimeout(() => setIsPublishing(false), 800);
                 }}
                 disabled={isPublishing}
-                className="rounded-md bg-foreground px-4 py-1.5 text-sm font-medium text-background transition-all duration-300 ease-in-out hover:opacity-90 disabled:opacity-50"
+                className="rounded-md bg-foreground px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium text-background transition-all duration-300 ease-in-out hover:opacity-90 disabled:opacity-50"
               >
                 {isPublishing ? "Publishing..." : "Publish edits"}
               </button>
@@ -210,10 +212,10 @@ export default function BuilderPage() {
       </header>
 
       {/* Main Builder Area */}
-      <div className="flex flex-1 overflow-x-auto overflow-y-hidden no-scrollbar">
-        <div className="flex flex-1 min-w-[1024px] h-full">
+      <div className="flex flex-1 overflow-y-auto lg:overflow-hidden bg-background">
+        <div className="flex flex-1 flex-col lg:flex-row w-full lg:h-full">
           {/* Left Rail (Question List) */}
-          <div className="w-[280px] flex-shrink-0 overflow-y-auto border-r border-border bg-card">
+          <div className="w-full lg:w-[280px] flex-shrink-0 lg:h-full overflow-y-auto border-b lg:border-b-0 lg:border-r border-border bg-card min-h-[300px]">
             <QuestionList 
               questions={form.questions}
               formSettings={form.settings}
@@ -230,7 +232,7 @@ export default function BuilderPage() {
           </div>
 
           {/* Center Pane (Editor) */}
-          <div className="z-10 flex w-[350px] flex-shrink-0 flex-col overflow-y-auto border-r border-border bg-card shadow-sm">
+          <div className="z-10 flex w-full lg:w-[350px] flex-shrink-0 flex-col lg:h-full overflow-y-auto border-b lg:border-b-0 lg:border-r border-border bg-card shadow-sm min-h-[400px]">
             {activeQuestionId === "welcome" ? (
               <WelcomeEditor form={form} onChange={(updates) => {
                 setForm({ ...form, ...updates });
@@ -256,7 +258,7 @@ export default function BuilderPage() {
           </div>
 
           {/* Right Pane (Live Preview) */}
-          <div className="relative flex flex-1 items-center justify-center overflow-x-hidden overflow-y-auto bg-background p-4 lg:p-8">
+          <div className="relative flex flex-1 flex-col items-center justify-center overflow-x-hidden overflow-y-auto bg-background p-4 lg:p-8 min-h-[500px]">
             <div className="w-full max-w-4xl h-full bg-white shadow-xl rounded-2xl overflow-hidden relative flex flex-col rx-theme">
               <ThemeProvider form={form}>
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 relative">

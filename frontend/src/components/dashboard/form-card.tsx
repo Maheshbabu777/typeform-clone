@@ -80,7 +80,7 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
       <div className="space-y-3">
         <div className="flex items-start justify-between">
           <Link href={`/forms/${form.id}/edit`} className="block w-full">
-            <h3 className="truncate pr-8 text-lg font-semibold text-card-foreground transition-colors group-hover:text-primary">
+            <h3 className="truncate pr-8 text-lg font-medium text-card-foreground transition-colors group-hover:text-primary">
               {form.title}
             </h3>
           </Link>

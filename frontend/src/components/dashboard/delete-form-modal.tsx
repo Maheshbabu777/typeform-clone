@@ -47,7 +47,7 @@ export function DeleteFormModal({ isOpen, onClose, form, onSuccess }: DeleteForm
             Delete form
           </DialogTitle>
           <DialogDescription className="pt-2">
-            Are you sure you want to delete <span className="font-semibold text-foreground">"{form.title}"</span>?
+            Are you sure you want to delete <span className="font-medium text-foreground">"{form.title}"</span>?
             <br /><br />
             This action cannot be undone. All questions, logic rules, and respondent data will be permanently removed.
           </DialogDescription>

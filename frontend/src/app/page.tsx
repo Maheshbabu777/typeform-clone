@@ -113,10 +113,10 @@ export default function DashboardPage() {
           >
             {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#d85d5d] text-sm font-semibold text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#d85d5d] text-sm font-medium text-white">
             M
           </div>
-          <button className="flex max-w-[150px] items-center gap-1 truncate rounded px-2 py-1 text-sm font-medium text-foreground hover:bg-muted sm:max-w-xs">
+          <button className="flex max-w-[100px] items-center gap-1 truncate rounded px-1 sm:px-2 py-1 text-sm font-medium text-foreground hover:bg-muted sm:max-w-xs">
             <span className="truncate">maheshbabuvishnumolakala</span>
             <ChevronDown className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
           </button>
@@ -141,7 +141,7 @@ export default function DashboardPage() {
               <DropdownMenuItem className="cursor-pointer" onClick={() => handleDummyClick("Keyboard shortcuts")}>Keyboard shortcuts</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#fbd9e2] text-xs font-semibold text-[#8c3b52] flex-shrink-0">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#fbd9e2] text-xs font-medium text-[#8c3b52] flex-shrink-0">
             MV
           </div>
         </div>
