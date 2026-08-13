@@ -137,6 +137,13 @@ export async function createLogicRule(formId: number, payload: LogicRuleCreatePa
   });
 }
 
+export async function updateLogicRule(logicId: number, payload: { condition_value?: string, target_question_id?: number | null }): Promise<LogicRule> {
+  return request<LogicRule>(`/logic/${logicId}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function deleteLogicRule(logicId: number): Promise<void> {
   return request<void>(`/logic/${logicId}`, { method: "DELETE" });
 }

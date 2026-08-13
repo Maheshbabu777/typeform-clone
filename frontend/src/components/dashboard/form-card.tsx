@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { RenameFormModal } from "./rename-form-modal";
+import { DeleteFormModal } from "./delete-form-modal";
 
 interface FormCardProps {
   form: FormSummary;
@@ -28,7 +29,7 @@ interface FormCardProps {
 }
 
 export function FormCard({ form, onUpdate }: FormCardProps) {
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
 
@@ -44,17 +45,10 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
     }
   };
 
-  const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this form? This cannot be undone.")) {
-      setIsDeleting(true);
-      try {
-        await deleteForm(form.id);
-        onUpdate();
-      } catch (err) {
-        console.error(err);
-        setIsDeleting(false);
-      }
-    }
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDeleteDialogOpen(true);
   };
 
   const handleDuplicate = async () => {
@@ -140,7 +134,7 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
                 
                 <DropdownMenuItem 
                   onClick={handleDelete} 
-                  disabled={isDeleting}
+                  disabled={isDeleteDialogOpen}
                   className="cursor-pointer gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
                 >
                   <Trash2 className="h-4 w-4" /> Delete
@@ -172,6 +166,12 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
       <RenameFormModal 
         isOpen={isRenaming}
         onClose={() => setIsRenaming(false)}
+        form={form}
+        onSuccess={onUpdate}
+      />
+      <DeleteFormModal
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
         form={form}
         onSuccess={onUpdate}
       />

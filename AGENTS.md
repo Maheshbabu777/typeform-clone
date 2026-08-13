@@ -209,3 +209,17 @@ Do not record tiny mechanical edits unless they clarify a broader decision.
 **Decision:** Persisted the Dashboard List/Grid view toggle using `localStorage` instead of ephemeral React state, and added a `RenameFormModal` to the dropdown menus in both views. Modified the List View rows to be completely clickable (overlaying a Next.js Link) while keeping metric stats clickable as independent route links.
 
 **Rationale:** The user wanted the dashboard view preference to survive navigation back and forth to the builder, and needed a fast way to rename forms without entering the builder UI. The fully clickable row matches standard SaaS app conventions.
+
+### 2026-08-13 - Phase 3 Form Builder - Logic Jumps Implementation
+
+**Decision:** Implemented Logic Jumps in the form builder (`/forms/[id]/edit`). Added a `PUT /logic/{logic_id}` API endpoint for updating existing logic rules. Created a `LogicJumpEditor` component and embedded it within the `QuestionEditor`. The editor dynamically restricts logic conditions based on the question type (e.g., choice dropdowns for multiple choice, scale values for ratings) and prevents jumping to previous questions to avoid cyclic logic.
+
+**Rationale:** Logic Jumps were originally deferred as a "bonus scope" item but are now a core requested feature. By restricting jump targets strictly to subsequent questions based on `order_index`, we prevent infinite loops during submission evaluation. Optimistic UI updates ensure the creator experience remains smooth and responsive.
+
+### 2026-08-14 - Dashboard UX - Replace Native Confirm with Shadcn Dialogs
+
+**Decision:** Replaced the native browser window.confirm dialog in the dashboard deletion flow with a custom DeleteFormModal built strictly using the shadcn/ui Dialog component.
+
+**Rationale:** The user correctly identified that native confirm boxes break the immersion of the custom UI and that we should leverage our existing shadcn/ui ecosystem to prevent repeating raw Tailwind HTML boilerplate. The DeleteFormModal enforces this pattern.
+
+**Tradeoffs / Follow-up:** Any future modals (like RenameFormModal or CreateFormModal rewrites) should follow this exact pattern using src/components/ui/dialog.tsx for consistency and accessibility.

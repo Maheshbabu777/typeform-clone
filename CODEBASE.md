@@ -183,6 +183,7 @@ Creator-facing logic-jump routes.
 |---|---|
 | `get_logic_rules(form_id)` | Handles `GET /forms/{form_id}/logic`. Returns all logic rules for a form. |
 | `create_logic_rule(form_id, payload)` | Handles `POST /forms/{form_id}/logic`. Validates source and target questions belong to the form, then creates one `equals` logic rule. |
+| `update_logic_rule(logic_id, payload)` | Handles `PUT /logic/{logic_id}`. Updates logic rule target and condition values. |
 | `delete_logic_rule(logic_id)` | Handles `DELETE /logic/{logic_id}`. Deletes one logic rule and touches the parent form timestamp. |
 
 ### `backend/app/routers/public.py`
@@ -434,7 +435,8 @@ Client-side logic-jump path evaluation, mirrored from the backend.
 
 | Component | Description |
 |---|---|
-| `QuestionEditor({ question, onChange })` | Renders the Center Pane. Exposes inputs for title, description, and required toggle. Conditionally renders option editors for choice types and max-scale for ratings. Uses a 500ms debounce to trigger `onChange`. |
+| `QuestionEditor({ form, question, onChange, onFormChange })` | Renders the Center Pane. Exposes inputs for title, description, and required toggle. Conditionally renders option editors for choice types and max-scale for ratings. Embeds `LogicJumpEditor` for logic rules. Uses a 500ms debounce to trigger `onChange`. |
+| `LogicJumpEditor({ form, question, onFormChange })` | Provides inline logic jump creation and editing per-question based on `order_index`. |
 
 ### `frontend/src/components/builder/theme-settings.tsx`
 

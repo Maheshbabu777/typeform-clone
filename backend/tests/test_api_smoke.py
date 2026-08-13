@@ -121,3 +121,92 @@ def test_form_settings_and_expanded_answer_validation(tmp_path, monkeypatch):
     )
     assert valid_response.status_code == 201
     assert valid_response.json()["completed"] is True
+
+
+def test_logic_jumps_skip_unvisited_required_questions(tmp_path, monkeypatch):
+    database_path = tmp_path / "test.db"
+    monkeypatch.setenv("DATABASE_URL", str(database_path))
+    get_settings.cache_clear()
+    init_database()
+
+    client = TestClient(app)
+
+    form = client.post("/forms", json={"title": "Logic check"}).json()
+    consent = client.post(
+        f"/forms/{form['id']}/questions",
+        json={"type": "yes_no", "title": "Are you a customer?", "required": True},
+    ).json()
+    skipped_email = client.post(
+        f"/forms/{form['id']}/questions",
+        json={"type": "email", "title": "Work email", "required": True},
+    ).json()
+    destination = client.post(
+        f"/forms/{form['id']}/questions",
+        json={"type": "short_text", "title": "What can we improve?", "required": True},
+    ).json()
+
+    backward_rule = client.post(
+        f"/forms/{form['id']}/logic",
+        json={
+            "question_id": skipped_email["id"],
+            "condition_value": "person@example.com",
+            "target_question_id": consent["id"],
+        },
+    )
+    assert backward_rule.status_code == 400
+
+    lowercase_yes_no_rule = client.post(
+        f"/forms/{form['id']}/logic",
+        json={
+            "question_id": consent["id"],
+            "condition_value": "yes",
+            "target_question_id": destination["id"],
+        },
+    )
+    assert lowercase_yes_no_rule.status_code == 400
+
+    rule = client.post(
+        f"/forms/{form['id']}/logic",
+        json={
+            "question_id": consent["id"],
+            "condition_value": "Yes",
+            "target_question_id": destination["id"],
+        },
+    ).json()
+
+    backward_update = client.put(
+        f"/logic/{rule['id']}",
+        json={"target_question_id": consent["id"]},
+    )
+    assert backward_update.status_code == 400
+
+    invalid_condition_update = client.put(
+        f"/logic/{rule['id']}",
+        json={"condition_value": "Maybe"},
+    )
+    assert invalid_condition_update.status_code == 400
+
+    slug = client.post(f"/forms/{form['id']}/publish").json()["public_slug"]
+
+    skipped_required_response = client.post(
+        f"/public/{slug}/submit",
+        json={
+            "answers": [
+                {"question_id": consent["id"], "value": "Yes"},
+                {"question_id": destination["id"], "value": "Better onboarding"},
+            ]
+        },
+    )
+    assert skipped_required_response.status_code == 201
+
+    missing_required_response = client.post(
+        f"/public/{slug}/submit",
+        json={
+            "answers": [
+                {"question_id": consent["id"], "value": "No"},
+                {"question_id": destination["id"], "value": "Better onboarding"},
+            ]
+        },
+    )
+    assert missing_required_response.status_code == 400
+    assert f"Question {skipped_email['id']} is required." in missing_required_response.text

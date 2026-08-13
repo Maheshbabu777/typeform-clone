@@ -69,6 +69,11 @@ class LogicRuleCreate(BaseModel):
     target_question_id: int | None = None
 
 
+class LogicRuleUpdate(BaseModel):
+    condition_value: str | None = Field(default=None, min_length=1)
+    target_question_id: int | None = None
+
+
 class PublicAnswer(BaseModel):
     question_id: int
     value: str

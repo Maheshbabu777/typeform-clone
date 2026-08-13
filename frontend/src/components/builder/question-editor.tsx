@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Question, QuestionUpdatePayload } from "@/lib/types";
+import { PublicForm, Question, QuestionUpdatePayload } from "@/lib/types";
 import { Trash2, Plus } from "lucide-react";
+import { LogicJumpEditor } from "./logic-jump-editor";
 
 interface QuestionEditorProps {
+  form: PublicForm;
   question: Question;
   onChange: (updates: QuestionUpdatePayload) => void;
+  onFormChange: (form: PublicForm) => void;
 }
 
-export function QuestionEditor({ question, onChange }: QuestionEditorProps) {
+export function QuestionEditor({ form, question, onChange, onFormChange }: QuestionEditorProps) {
   // Local state for debounced title/description typing
   const [title, setTitle] = useState(question.title);
   const [description, setDescription] = useState(question.description || "");
@@ -165,17 +168,14 @@ export function QuestionEditor({ question, onChange }: QuestionEditorProps) {
           </div>
         )}
 
-        {/* Logic Jumps Placeholder */}
-        <div className="border-t border-border pt-6">
+        {/* Logic Jumps */}
+        <div className="border-t border-border pt-6 pb-6">
           <h3 className="mb-2 text-sm font-semibold text-card-foreground">Logic Jumps</h3>
-          <div className="rounded-md border border-dashed border-border bg-muted p-4 text-center">
-            <p className="text-sm text-muted-foreground">
-              Logic jumps allow you to redirect respondents based on their answers.
-            </p>
-            <button className="mt-3 cursor-not-allowed text-sm font-medium text-primary opacity-50">
-              + Add logic jump (Coming Soon)
-            </button>
-          </div>
+          <LogicJumpEditor 
+            form={form} 
+            question={question} 
+            onFormChange={onFormChange} 
+          />
         </div>
 
       </div>
