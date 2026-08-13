@@ -121,3 +121,11 @@ Do not record tiny mechanical edits unless they clarify a broader decision.
 **Rationale:** The respondent flow is the highest-weighted screen and the core Typeform feel. Keeping it separate from the app shell preserves the CX/RX split from the build spec. Client-side path evaluation matches server validation behavior so progress and skips feel immediate without extra round trips per question.
 
 **Tradeoffs / Follow-up:** The builder preview in Phase 3 should reuse `QuestionRenderer` and `ThemeProvider` rather than duplicating question UI. Keyboard back-navigation and richer transition polish can be added later without changing the API contract.
+
+### 2026-08-13 - Phase 3 Form Builder - UI Architecture
+
+**Decision:** Built the Creator Form Builder (`/forms/[id]/edit`) using a three-pane architecture: a Left Rail for question sorting (`@dnd-kit`), a Center Pane for editing question details and options, and a Right Pane for a live preview.
+
+**Rationale:** The 3-pane layout matches the UX specification and Typeform's actual CX. Using `@dnd-kit` provides accessible, standard drag-and-drop mechanics without complex custom cursor-tracking logic. The right pane heavily reuses the `QuestionRenderer` and `ThemeProvider` built in Phase 2, ensuring that the creator's live preview matches the respondent's exact experience.
+
+**Tradeoffs / Follow-up:** Save operations on text fields (title/description) are currently implemented with a simple 500ms debounce to simulate auto-save and prevent API flooding. Logic Jumps are currently stubbed in the UI as per the 'bonus scope' deferral strategy.

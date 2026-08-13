@@ -9,7 +9,7 @@ interface QuestionRendererProps {
   value: string;
   error: string | null;
   onChange: (value: string) => void;
-  onSubmit: () => void;
+  onSubmit: (value?: string | React.MouseEvent | React.FormEvent) => void;
   showOkButton: boolean;
   isSubmitting: boolean;
 }
@@ -32,7 +32,7 @@ export function QuestionRenderer({
   ] as const);
 
   return (
-    <div className="flex w-full max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <div className="flex flex-col gap-3">
         <p
           className="text-[length:var(--rx-font-helper)]"

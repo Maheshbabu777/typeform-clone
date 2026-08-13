@@ -7,7 +7,7 @@ interface AnswerInputProps {
   question: Question;
   value: string;
   onChange: (value: string) => void;
-  onSubmit: () => void;
+  onSubmit: (value?: string | React.MouseEvent | React.FormEvent) => void;
   autoFocus?: boolean;
 }
 
@@ -25,8 +25,8 @@ function ChoiceButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "w-full border px-5 py-4 text-left transition-colors duration-150",
-        "text-[length:var(--rx-font-input-mobile)] lg:text-[length:var(--rx-font-input)]",
+        "w-full border px-4 py-3 text-left transition-colors duration-150 flex items-center",
+        "text-[length:var(--rx-font-description-mobile)] lg:text-[length:var(--rx-font-description)]",
         selected ? "border-[var(--rx-answer)] bg-[var(--rx-bg-active)]" : "border-transparent",
       )}
       style={{
@@ -61,7 +61,8 @@ export function AnswerInput({
   autoFocus = true,
 }: AnswerInputProps) {
   const inputClassName = cn(
-    "w-full border-0 border-b-2 bg-transparent outline-none transition-colors",
+    "w-full border-0 border-b border-[color:var(--rx-question)]/30 bg-transparent py-2 outline-none transition-all",
+    "focus:border-b-2 focus:border-[color:var(--rx-answer)] focus:ring-0",
     "text-[length:var(--rx-font-input-mobile)] lg:text-[length:var(--rx-font-input)]",
     "placeholder:text-[color:var(--rx-question)]/40",
   );
@@ -83,28 +84,41 @@ export function AnswerInput({
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={handleKeyDown}
           className={inputClassName}
-          style={{ borderColor: "var(--rx-answer)", color: "var(--rx-question)" }}
+          style={{ color: "var(--rx-question)" }}
           placeholder="Type your answer here..."
         />
       );
 
     case "long_text":
       return (
-        <textarea
-          autoFocus={autoFocus}
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
-              event.preventDefault();
-              onSubmit();
-            }
-          }}
-          rows={4}
-          className={cn(inputClassName, "resize-none leading-relaxed")}
-          style={{ borderColor: "var(--rx-answer)", color: "var(--rx-question)" }}
-          placeholder="Type your answer here..."
-        />
+        <div className="flex flex-col gap-2">
+          <textarea
+            autoFocus={autoFocus}
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+                event.preventDefault();
+                onSubmit();
+              }
+            }}
+            onInput={(e) => {
+              const target = e.target as HTMLTextAreaElement;
+              target.style.height = "auto";
+              target.style.height = `${target.scrollHeight}px`;
+            }}
+            rows={1}
+            className={cn(inputClassName, "resize-none overflow-hidden leading-relaxed")}
+            style={{ color: "var(--rx-question)" }}
+            placeholder="Type your answer here..."
+          />
+          <span
+            className="text-[12px] font-medium"
+            style={{ color: "var(--rx-question)", opacity: 0.6 }}
+          >
+            <strong>Shift ⇧</strong> + <strong>Enter ↵</strong> to make a line break
+          </span>
+        </div>
       );
 
     case "email":
@@ -118,7 +132,7 @@ export function AnswerInput({
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={handleKeyDown}
           className={inputClassName}
-          style={{ borderColor: "var(--rx-answer)", color: "var(--rx-question)" }}
+          style={{ color: "var(--rx-question)" }}
           placeholder="name@example.com"
         />
       );
@@ -133,14 +147,14 @@ export function AnswerInput({
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={handleKeyDown}
           className={inputClassName}
-          style={{ borderColor: "var(--rx-answer)", color: "var(--rx-question)" }}
+          style={{ color: "var(--rx-question)" }}
           placeholder="0"
         />
       );
 
     case "multiple_choice":
       return (
-        <div className="flex flex-col gap-2">
+        <div className="flex w-fit min-w-[200px] flex-col gap-2">
           {question.options.map((option) => (
             <ChoiceButton
               key={option}
@@ -148,7 +162,7 @@ export function AnswerInput({
               selected={value === option}
               onClick={() => {
                 onChange(option);
-                setTimeout(onSubmit, 120);
+                setTimeout(() => onSubmit(option), 120);
               }}
             />
           ))}
@@ -161,9 +175,10 @@ export function AnswerInput({
           autoFocus={autoFocus}
           value={value}
           onChange={(event) => {
-            onChange(event.target.value);
-            if (event.target.value) {
-              setTimeout(onSubmit, 120);
+            const val = event.target.value;
+            onChange(val);
+            if (val) {
+              setTimeout(() => onSubmit(val), 120);
             }
           }}
           className={cn(
@@ -171,7 +186,7 @@ export function AnswerInput({
             "cursor-pointer appearance-none py-3",
             !value && "text-[color:var(--rx-question)]/40",
           )}
-          style={{ borderColor: "var(--rx-answer)", color: "var(--rx-question)" }}
+          style={{ color: "var(--rx-question)" }}
         >
           <option value="">Select an option</option>
           {question.options.map((option) => (
@@ -184,7 +199,7 @@ export function AnswerInput({
 
     case "yes_no":
       return (
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex w-fit min-w-[200px] flex-col gap-2 sm:flex-row">
           {["Yes", "No"].map((option) => (
             <ChoiceButton
               key={option}
@@ -192,7 +207,7 @@ export function AnswerInput({
               selected={value === option}
               onClick={() => {
                 onChange(option);
-                setTimeout(onSubmit, 120);
+                setTimeout(() => onSubmit(option), 120);
               }}
             />
           ))}
@@ -212,7 +227,7 @@ export function AnswerInput({
               type="button"
               onClick={() => {
                 onChange(option);
-                setTimeout(onSubmit, 120);
+                setTimeout(() => onSubmit(option), 120);
               }}
               className={cn(
                 "flex h-12 min-w-12 items-center justify-center px-4 transition-colors duration-150",

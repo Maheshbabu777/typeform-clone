@@ -19,3 +19,7 @@ npm-debug.log*
 .env
 .env.local
 .env.*.local
+
+# Assignment Docs
+typeform-clone-plan.md
+database-schema.md
