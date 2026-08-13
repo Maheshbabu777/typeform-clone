@@ -267,7 +267,7 @@ Shared frontend TypeScript types for public form payloads, questions, logic rule
 
 | Type | Description |
 |---|---|
-| `QuestionType` | Union of the eight supported question type identifiers. |
+| `QuestionType` | Union of the supported question type identifiers (e.g., short_text, multiple_choice, phone_number, etc.). |
 | `ThemeRoundness` | Respondent roundness preset: `none`, `small`, or `large`. |
 | `ThemeFontSize` | Respondent font-size preset: `small`, `medium`, or `large`. |
 | `ThemeColors` | Five-color respondent theme object returned by the API. |
@@ -361,6 +361,12 @@ Client-side logic-jump path evaluation, mirrored from the backend.
 | Component | Description |
 |---|---|
 | `QuestionList({ questions, ... })` | Renders the Left Rail using `@dnd-kit` for sortable drag-and-drop question reordering, and a Plus menu to add new questions. |
+
+### `frontend/src/components/builder/add-content-modal.tsx`
+
+| Component | Description |
+|---|---|
+| `AddContentModal({ isOpen, onClose, onSelectType })` | Full-screen modal that displays all available question types in categorized grids, including placeholders for "Coming Soon" elements. |
 
 ### `frontend/src/components/builder/question-editor.tsx`
 

@@ -15,14 +15,17 @@ export function WelcomeEditor({ form, onChange }: WelcomeEditorProps) {
   useEffect(() => {
     setTitle(form.title);
     setDescription(form.description || "");
-  }, [form.title, form.description]);
+  }, [form.id]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (title !== form.title || description !== (form.description || "")) {
+      const proposedTitle = title || "Untitled Form";
+      const proposedDesc = description || null;
+      
+      if (proposedTitle !== form.title || proposedDesc !== (form.description || null)) {
         onChange({ 
-          title: title.trim() || "Untitled Form", 
-          description: description || null 
+          title: proposedTitle, 
+          description: proposedDesc 
         });
       }
     }, 500);

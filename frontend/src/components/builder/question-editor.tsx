@@ -18,15 +18,18 @@ export function QuestionEditor({ question, onChange }: QuestionEditorProps) {
   useEffect(() => {
     setTitle(question.title);
     setDescription(question.description || "");
-  }, [question.id, question.title, question.description]);
+  }, [question.id]);
 
   // Use a simple timeout for debouncing text changes
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (title !== question.title || description !== (question.description || "")) {
+      const proposedTitle = title || "Untitled Question";
+      const proposedDesc = description || null;
+      
+      if (proposedTitle !== question.title || proposedDesc !== (question.description || null)) {
         onChange({ 
-          title: title.trim() || "Untitled Question", 
-          description: description || null 
+          title: proposedTitle, 
+          description: proposedDesc 
         });
       }
     }, 500);

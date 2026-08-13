@@ -129,3 +129,19 @@ Do not record tiny mechanical edits unless they clarify a broader decision.
 **Rationale:** The 3-pane layout matches the UX specification and Typeform's actual CX. Using `@dnd-kit` provides accessible, standard drag-and-drop mechanics without complex custom cursor-tracking logic. The right pane heavily reuses the `QuestionRenderer` and `ThemeProvider` built in Phase 2, ensuring that the creator's live preview matches the respondent's exact experience.
 
 **Tradeoffs / Follow-up:** Save operations on text fields (title/description) are currently implemented with a simple 500ms debounce to simulate auto-save and prevent API flooding. Logic Jumps are currently stubbed in the UI as per the 'bonus scope' deferral strategy.
+
+### 2026-08-13 - Phase 3 Form Builder - Add Content Modal & Expanded Question Types
+
+**Decision:** Built the full-screen `AddContentModal` for adding new form elements and expanded the SQLite schema, backend validation, and frontend `QuestionRenderer`/`AnswerInput` to support `phone_number` (`tel`), `website` (`url`), `date` (`date`), and `statement` (no input, just an OK button) question types.
+
+**Rationale:** The builder UI required a clean way to view and select all supported question types, including categorizations and "Coming Soon" placeholders for integrations and payments, which are explicitly graded assignment criteria.
+
+**Tradeoffs / Follow-up:** The `statement` question type doesn't collect a real "answer" value; the backend API simply skips saving answers that consist of an empty string, which perfectly handles the `statement` block's submission behavior without needing schema changes.
+
+### 2026-08-13 - Phase 3 Form Builder - Debounce State Sync Bug Fix
+
+**Decision:** Updated the center pane editors (`QuestionEditor`, `WelcomeEditor`, `ThankYouEditor`) to only sync their local state with the `question`/`form` props when the actual `id` changes, rather than every time the prop's `title` or `description` changes.
+
+**Rationale:** The 500ms debounce previously caused a race condition where a user's active typing (e.g., typing a space) would be overwritten by the debounced API update coming back as a prop change, deleting trailing spaces or causing a "flicker". Syncing only on ID change resolves this.
+
+**Tradeoffs / Follow-up:** If external forces (like real-time collaboration) were ever added, this component would not see updates from other users while focused. Since this is a single-creator application, this tradeoff is entirely acceptable to ensure a smooth typing experience.

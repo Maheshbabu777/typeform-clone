@@ -13,12 +13,13 @@ export function ThankYouEditor({ form, onChange }: ThankYouEditorProps) {
 
   useEffect(() => {
     setText(form.thank_you_text || "");
-  }, [form.thank_you_text]);
+  }, [form.id]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (text !== (form.thank_you_text || "")) {
-        onChange({ thank_you_text: text || null });
+      const proposedText = text || null;
+      if (proposedText !== (form.thank_you_text || null)) {
+        onChange({ thank_you_text: proposedText });
       }
     }, 500);
     return () => clearTimeout(handler);
