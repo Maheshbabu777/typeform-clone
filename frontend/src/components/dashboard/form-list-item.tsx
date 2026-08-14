@@ -100,7 +100,7 @@ export function FormListItem({ form, onUpdate }: FormListItemProps) {
           </Link>
         </div>
         <div className="w-32 text-center text-xs">
-          {new Date(form.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+          {new Date(form.updated_at).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", day: "2-digit", month: "short", year: "numeric" })}
         </div>
         <div className="relative z-10 flex w-24 justify-center text-muted-foreground">
           <button 

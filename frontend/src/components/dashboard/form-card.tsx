@@ -160,7 +160,7 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
       </div>
 
       <div className="mt-6 border-t border-border pt-3 text-xs text-muted-foreground">
-        Updated {new Date(form.updated_at).toLocaleDateString()}
+        Updated {new Date(form.updated_at).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", day: "2-digit", month: "short", year: "numeric" })}
       </div>
 
       <RenameFormModal 

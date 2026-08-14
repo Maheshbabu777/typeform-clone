@@ -63,7 +63,8 @@ export function ResponsesTable({ form, responses }: ResponsesTableProps) {
           <thead className="border-b border-border bg-muted text-muted-foreground">
             <tr>
               <th className="whitespace-nowrap px-6 py-4 font-medium">#</th>
-              <th className="whitespace-nowrap px-6 py-4 font-medium">Submitted At</th>
+              <th className="whitespace-nowrap px-6 py-4 font-medium">Started At</th>
+              <th className="whitespace-nowrap px-6 py-4 font-medium">Completed At</th>
               {form.questions.map((q, i) => (
                 <th key={q.id} className="whitespace-nowrap px-6 py-4 font-medium max-w-[200px] truncate" title={q.title}>
                   {i + 1}. {q.title}
@@ -74,7 +75,7 @@ export function ResponsesTable({ form, responses }: ResponsesTableProps) {
           <tbody className="divide-y divide-border">
             {isLoading ? (
               <tr>
-                <td colSpan={form.questions.length + 2} className="px-6 py-8 text-center text-muted-foreground">
+                <td colSpan={form.questions.length + 3} className="px-6 py-8 text-center text-muted-foreground">
                   <div className="flex items-center justify-center gap-2">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-muted border-t-muted-foreground" />
                     Loading response data...
@@ -99,8 +100,11 @@ export function ResponsesTable({ form, responses }: ResponsesTableProps) {
                       {responses.length - index}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-muted-foreground">
+                      {new Date(response.started_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-muted-foreground">
                       {response.completed_at 
-                        ? new Date(response.completed_at).toLocaleString() 
+                        ? new Date(response.completed_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) 
                         : <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-600 dark:bg-amber-950 dark:text-amber-300">Partial</span>}
                     </td>
                     
