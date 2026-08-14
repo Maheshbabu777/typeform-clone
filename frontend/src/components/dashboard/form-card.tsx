@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { RenameFormModal } from "./rename-form-modal";
 import { DeleteFormModal } from "./delete-form-modal";
+import { formatIndianDate } from "@/lib/utils";
 
 interface FormCardProps {
   form: FormSummary;
@@ -160,7 +161,7 @@ export function FormCard({ form, onUpdate }: FormCardProps) {
       </div>
 
       <div className="mt-6 border-t border-border pt-3 text-xs text-muted-foreground">
-        Updated {new Date(form.updated_at).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", day: "2-digit", month: "short", year: "numeric" })}
+        Updated {formatIndianDate(form.updated_at)}
       </div>
 
       <RenameFormModal 

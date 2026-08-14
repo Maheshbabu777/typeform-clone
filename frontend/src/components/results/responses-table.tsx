@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PublicForm, ResponseSummary } from "@/lib/types";
+import { formatIndianDateTime } from "@/lib/utils";
 
 interface ResponsesTableProps {
   form: PublicForm;
@@ -100,11 +101,11 @@ export function ResponsesTable({ form, responses }: ResponsesTableProps) {
                       {responses.length - index}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-muted-foreground">
-                      {new Date(response.started_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
+                      {formatIndianDateTime(response.started_at)}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-muted-foreground">
                       {response.completed_at 
-                        ? new Date(response.completed_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) 
+                        ? formatIndianDateTime(response.completed_at)
                         : <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-600 dark:bg-amber-950 dark:text-amber-300">Partial</span>}
                     </td>
                     

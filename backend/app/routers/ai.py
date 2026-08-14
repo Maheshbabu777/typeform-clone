@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 
@@ -74,16 +75,31 @@ async def generate_form_with_ai(request: Request, payload: AIGenerateRequest):
     """
     
     try:
-        response = client.models.generate_content(
-            model='gemini-flash-latest',
-            contents=payload.prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                response_schema=GeneratedForm,
-                system_instruction=system_instruction,
-                temperature=0.7,
-            ),
-        )
+        response = None
+        last_error = None
+        for attempt in range(3):
+            try:
+                response = client.models.generate_content(
+                    model='gemini-1.5-flash-8b',
+                    contents=payload.prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=GeneratedForm,
+                        system_instruction=system_instruction,
+                        temperature=0.7,
+                    ),
+                )
+                break
+            except Exception as e:
+                last_error = e
+                if "503" in str(e) and attempt < 2:
+                    logger.warning(f"503 Unavailable on attempt {attempt+1}. Retrying in 2s...")
+                    await asyncio.sleep(2)
+                else:
+                    raise e
+                    
+        if not response:
+            raise last_error or ValueError("Failed to generate content")
         
         raw_text = response.text
         if not raw_text:

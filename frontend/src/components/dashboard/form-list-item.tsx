@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { RenameFormModal } from "./rename-form-modal";
 import { DeleteFormModal } from "./delete-form-modal";
+import { formatIndianDate } from "@/lib/utils";
 
 interface FormListItemProps {
   form: FormSummary;
@@ -100,7 +101,7 @@ export function FormListItem({ form, onUpdate }: FormListItemProps) {
           </Link>
         </div>
         <div className="w-32 text-center text-xs">
-          {new Date(form.updated_at).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", day: "2-digit", month: "short", year: "numeric" })}
+          {formatIndianDate(form.updated_at)}
         </div>
         <div className="relative z-10 flex w-24 justify-center text-muted-foreground">
           <button 
