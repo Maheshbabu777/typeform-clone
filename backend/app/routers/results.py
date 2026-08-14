@@ -10,6 +10,12 @@ from app.routers.forms import ensure_form
 
 router = APIRouter(tags=["results"])
 
+def sanitize_csv_cell(val: Any) -> str:
+    s = str(val)
+    if s and s[0] in ("=", "+", "-", "@"):
+        return f"'{s}"
+    return s
+
 
 @router.get("/forms/{form_id}/responses")
 def list_form_responses(form_id: int) -> list[dict[str, Any]]:
@@ -121,7 +127,7 @@ def export_form_csv(form_id: int) -> Response:
                 response["started_at"],
                 response["completed_at"],
                 *[
-                    answers_by_response.get((int(response["id"]), int(question["id"])), "")
+                    sanitize_csv_cell(answers_by_response.get((int(response["id"]), int(question["id"])), ""))
                     for question in questions
                 ],
             ]

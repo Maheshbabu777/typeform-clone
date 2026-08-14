@@ -245,6 +245,14 @@ Do not record tiny mechanical edits unless they clarify a broader decision.
 
 **Rationale:** The user previously requested to remove the "N" logo locally. However, Next 16's strict TypeScript compiler on Vercel failed the production build because the exact type signature for `devIndicators` changed. Since it's a dev-only feature anyway, completely removing it ensures Vercel compiles successfully.
 
+### 2026-08-14 - Security Audit - CSV Injection & Proxy Rate Limiting
+
+**Decision:** Fixed a CSV injection vulnerability in `backend/app/routers/results.py` by prepending an apostrophe (`'`) to any cell values starting with `=`, `+`, `-`, or `@`. Also updated the `slowapi` rate limiter in `backend/app/routers/ai.py` to use a custom `get_real_ip` function that reads the `X-Forwarded-For` header instead of `client.host`.
+
+**Rationale:** The user requested a full 10-point security audit. The CSV export was writing raw text, meaning respondent answers starting with operators could execute formulas in Excel/Google Sheets. The rate limiter, because it was deployed behind Render's load balancer, was tracking the proxy's IP address rather than the end-user's, effectively causing a global rate limit of 3 requests/minute for the entire application.
+
+**Tradeoffs / Follow-up:** Documented known security gaps (no auth, no public rate limit) in `README.md` to prevent false flags in future audits.
+
 ### 2026-08-14 - Deployment - SQLite Auto-Initialization on Startup
 
 **Decision:** Modified `backend/app/main.py` to add a FastAPI `lifespan` event that calls `init_database()` automatically when the server boots.

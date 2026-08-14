@@ -12,7 +12,11 @@ from app.schemas import FormUpdate
 from app.routers.questions import create_question
 
 from slowapi import Limiter
-from slowapi.util import get_remote_address
+
+def get_real_ip(request: Request) -> str:
+    if forwarded_for := request.headers.get("X-Forwarded-For"):
+        return forwarded_for.split(",")[0].strip()
+    return request.client.host if request.client else "127.0.0.1"
 
 from google import genai
 from google.genai import types
@@ -20,7 +24,7 @@ from google.genai import types
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/ai", tags=["AI"])
-limiter = Limiter(key_func=get_remote_address)
+limiter = Limiter(key_func=get_real_ip)
 
 class AIGenerateRequest(BaseModel):
     prompt: str = Field(..., min_length=5, max_length=1000)
